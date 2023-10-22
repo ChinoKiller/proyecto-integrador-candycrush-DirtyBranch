@@ -9,3 +9,7 @@
 - Emanuel García Rojas C23166
 
 - Kevin Ramirez Barboza C26240
+
+
+Referencias:
+Maquina de estado: www.sonarlearning.co.uk
