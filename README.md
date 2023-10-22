@@ -1,4 +1,4 @@
-# Proyecto Integrador: Alienígenas Alineados
+# Proyecto Integrador: Alienígenas Alienados
 
 **Integrantes:**
 
