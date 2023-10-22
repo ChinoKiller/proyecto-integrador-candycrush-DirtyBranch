@@ -96,11 +96,6 @@ int GameBoard::generateRandomBoard() {
   return EXIT_SUCCESS;
 }
 
-// revisar que hayan jugadas posibles
-// revisar que hayan combinaciones
-// revisar según prioridad
-// eliminar combinaciones 
-// aplicar gravedad
-// generar nuevos elementos que caigan 
+
 
    

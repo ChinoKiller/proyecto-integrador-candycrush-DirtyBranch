@@ -1,6 +1,7 @@
 #include <iostream>
 #include "common.hpp"
 #include <random>
+
 // clase GameBoard
 class GameBoard {
   private:
@@ -13,7 +14,7 @@ class GameBoard {
   
   // funciones privadas
   private:
-    // Deshabilitar la copia de objetos gameBoard.
+    // Deshabilitar la copia de objetos GameBoard
     DISABLE_COPY(GameBoard); 
     // leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
@@ -23,13 +24,18 @@ class GameBoard {
     int printMatrix();
     // generar tablero aleatoriamente
     int generateRandomBoard();
-  
+    // revisar que hayan combinaciones
+    // revisar según prioridad
+    // eliminar combinaciones y aumentar puntuación
+    // aplicar gravedad
+    // generar nuevos elementos que caigan 
+    // revisar que hayan jugadas posibles
   public:
     // constructor
     GameBoard(){}
     // destructor
     ~GameBoard();
-    // Para obtener una instancia de GameBoard.
+    // para obtener una instancia de GameBoard
     static GameBoard& getInstance();
     // función que maneja todas las funciones del GameBoard
     int runGameBoard();
