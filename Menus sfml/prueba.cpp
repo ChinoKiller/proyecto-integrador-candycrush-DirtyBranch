@@ -50,7 +50,7 @@ Menu menuP(sf::RenderWindow &window, Menu &currentMenu){
                     currentMenu = INSTRUCTIONS_MENU;
 
 
-                } else if (event.key.code == 88) {
+                } else if (event.key.code == sf::Keyboard::Up) {
                     currentMenu = LEVEL_MENU;
 
 
@@ -121,12 +121,38 @@ Menu menuI(sf::RenderWindow &window, Menu &currentMenu){
     return currentMenu;
 }
 
-
+Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
+    std::vector<sf::Texture> frames;
+    sf::Texture texture;
+    texture.loadFromFile("./Niveles/nivel9.jpg");
+    while (window.isOpen()&& currentMenu==LEVEL_MENU) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+        window.clear();
+        sf::Sprite sprite(texture);
+        window.draw(sprite);
+        window.display();
+        if (event.type == sf::Event::KeyPressed) {
+            if (currentMenu == LEVEL_MENU) {
+                if (event.key.code == sf::Keyboard::Down) {
+                    currentMenu = MAIN_MENU;
+                } else if (event.key.code == sf::Keyboard::Up) {
+                    currentMenu = EXIT;   
+                } 
+            }
+        }
+    }
+    return currentMenu;
+}
 
 
 int main() {
     
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Fondo Animado");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
     Menu currentMenu = MAIN_MENU;
     //maquina de estados
     while (currentMenu != EXIT){
@@ -136,7 +162,7 @@ int main() {
                 break;
 
             case LEVEL_MENU:
-                    window.clear(sf::Color::White);
+                    currentMenu = menuN(window, currentMenu);
                 break;
 
             case INSTRUCTIONS_MENU:
