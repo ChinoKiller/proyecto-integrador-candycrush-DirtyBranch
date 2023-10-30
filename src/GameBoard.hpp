@@ -11,7 +11,9 @@ class GameBoard {
     int colSize;
     // matriz dinámica, para que se pueda ajustar según el tamaño del tablero deseado
     int** gameMatrix;
-  
+    // se encontró una combinación
+    bool combinationFound = true;
+
   // funciones privadas
   private:
     // Deshabilitar la copia de objetos GameBoard
@@ -24,9 +26,28 @@ class GameBoard {
     int printMatrix();
     // generar tablero aleatoriamente
     int generateRandomBoard();
-    // revisar que hayan combinaciones
-    // revisar según prioridad
-    // eliminar combinaciones y aumentar puntuación
+    // generar números aleatorios en espacios en blanco
+    int generateRandomNewNumber();
+    // revisar que no nos salgamos de la matriz
+    bool withinMatrix(int row, int col);
+    // son del mismo color
+    bool isSameColor(int row, int col, int color);
+    
+    // revisar que hayan combinaciones, revisar según prioridad
+    // buscar verticales de 5 o mas
+    bool searchBigVertical();
+    // buscar vertical de 4 o 3, según parámetro
+    bool searchVertical(int verticalLength);
+    // buscar horizontales de 5 o mas
+    bool searchBigHorizontal();
+    
+    // eliminar elemento
+    int eliminateElement(int row, int col);
+    // eliminar combinaciones
+    // eliminar verticales
+    void eliminateVertical(int row, int col, int lengthToEliminate);
+    // aumentar puntuación
+
     // aplicar gravedad
     // generar nuevos elementos que caigan 
     // revisar que hayan jugadas posibles
