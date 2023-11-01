@@ -13,6 +13,18 @@ class GameBoard {
     int** gameMatrix;
     // se encontró una combinación
     bool combinationFound = true;
+    // matriz con las formas L y T, incluyendo todas sus rotaciones
+    int LTshapes[8][5][2] = {
+    // 1         2         3         4         5
+    {{+0, +0}, {+1, +0}, {+2, +0}, {+2, +1}, {+2, +2}},  // L1
+    {{+0, +0}, {+1, +0}, {+2, -2}, {+2, -1}, {+2, +0}},  // L2
+    {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +0}, {+2, +0}},  // L3
+    {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +2}, {+2, +2}},  // L4
+    {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +1}, {+2, +1}},  // T1
+    {{+0, +0}, {+1, +0}, {+2, -1}, {+2, +0}, {+2, +1}},  // T2
+    {{+0, +0}, {+1, +0}, {+1, +1}, {+1, +2}, {+2, +0}},  // T3
+    {{+0, +0}, {+1, -2}, {+1, -1}, {+1, +0}, {+2, +0}},  // T4
+  };
 
   // funciones privadas
   private:
@@ -32,7 +44,7 @@ class GameBoard {
     bool withinMatrix(int row, int col);
     // son del mismo color
     bool isSameColor(int row, int col, int color);
-    
+
     // revisar que hayan combinaciones, revisar según prioridad
     // buscar verticales de 5 o mas
     bool searchBigVertical();
@@ -40,16 +52,25 @@ class GameBoard {
     bool searchVertical(int verticalLength);
     // buscar horizontales de 5 o mas
     bool searchBigHorizontal();
+    // buscar horizontales de 4 o 3, según el parámetro
+    bool searchHorizontal(int horizontalLength);
+    // buscar en forma de L y T
+    bool searchLT();
     
-    // eliminar elemento
-    int eliminateElement(int row, int col);
+
     // eliminar combinaciones
     // eliminar verticales
     void eliminateVertical(int row, int col, int lengthToEliminate);
-    // aumentar puntuación
+    // eliminar horizontales 
+    void eliminateHorizontal(int row, int col, int horizontalLength);
+    // eliminar elemento
+    int eliminateElement(int row, int col);
+    // eliminar LT
+    void eliminateLT(int shapeNumber, int row, int col);
 
+    // aumentar puntuación
     // aplicar gravedad
-    // generar nuevos elementos que caigan 
+    int applyGravity();
     // revisar que hayan jugadas posibles
   public:
     // constructor

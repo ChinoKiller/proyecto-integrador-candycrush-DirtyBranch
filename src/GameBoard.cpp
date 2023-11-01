@@ -24,19 +24,42 @@ int GameBoard::runGameBoard() {
       printMatrix();
       continue;
     }
+    // buscar horizontales de 5 o mas de largo
+    if (searchBigHorizontal()) {
+      std::cout << "Encontró: horizontal de 5 o mas" << std::endl;
+      printMatrix();
+      continue;
+    }
+    // buscar elementos en forma de L y T
+    if (searchLT()) {
+      std::cout << "Encontró: LT" << std::endl;
+      printMatrix();
+      continue;
+    }
+    // buscar elementos verticales de 4
     if (searchVertical(4)) {
       std::cout << "Encontró: vertical de 4" << std::endl;
       printMatrix();
       continue;
     }
+    // buscar elementos horizontales de 4
+    if (searchHorizontal(4)) {
+      std::cout << "Encontró: horizontal de 4" << std::endl;
+      printMatrix();
+      continue;
+    }
+    // buscar elementos verticales de 3
     if (searchVertical(3)) {
       std::cout << "Encontró: vertical de 3" << std::endl;
       printMatrix();
       continue;
     }
-    // horizontales de 5 o mas de largo
-    // buscar buscar elementos en forma de L y T
-    // buscar elementos verticales y horizontales de 4 o 3 de largo
+    // buscar elementos horizontales de 3
+    if (searchHorizontal(3)) {
+      std::cout << "Encontró: horizontal de 3" << std::endl;
+      printMatrix();
+      continue;
+    }
     // si el programa logra llegar hasta aquí es que no encontró combinaciones
     this->combinationFound = false;
   }
@@ -204,10 +227,128 @@ bool GameBoard::searchVertical(int verticalLength) {
   return false;
 }
 
-bool GameBoard::searchBigHorizontal(){
-  return EXIT_SUCCESS;
+bool GameBoard::searchBigHorizontal() {
+  std::cout << "Buscando Horizontal de 5 o mas" << std::endl;
+  // recorrer la matriz
+  for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
+    for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
+      // tomar un elemento
+      int elementColor = gameMatrix[rowIndex][colIndex];
+      int colPosition = colIndex;
+      bool sameColor = true;
+      int horizontalLength = 0;
+      // verificar si ese elemento tiene combinación horizontal
+      // mientras tenga el mismo color y no se salga de las columnas
+      while(sameColor && colPosition < colSize) {
+        // revisar que elemento sea del mismo color al original
+        sameColor = isSameColor(rowIndex, colPosition, elementColor);
+        // si son del mismo color
+        if (sameColor){
+          // aumentar tamaño
+          horizontalLength++;
+          // seguir buscando
+          colPosition++;
+        } else {
+          break;
+        }
+      }
+      if (horizontalLength >= 5) {
+        // eliminar horizontal de 5 o mas
+        eliminateHorizontal(rowIndex, colIndex, horizontalLength);
+        // aumentar puntuación
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
+// buscar horizontales de 4 o 3, según el parámetro
+bool GameBoard::searchHorizontal(int horizontalLength) {
+  std::cout << "Buscando horizontales " << horizontalLength << std::endl;
+  // recorrer la matriz
+  for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
+    for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
+      // tomar un elemento
+      int elementColor = gameMatrix[rowIndex][colIndex];
+      int colPosition = colIndex;
+      bool sameColor = true;
+      // verificar si ese elemento tiene combinación horizontal de horizontalLength
+      for(int index = 0; index < horizontalLength; index++) {
+        sameColor = isSameColor(rowIndex, colPosition + index, elementColor);
+        if (sameColor == false) {
+          break;
+        }
+      }
+      // si el bool sameColor sigue como verdadero, ya encontré una combinación de horizontalLength
+      if (sameColor) {
+        // eliminar combinación
+        eliminateHorizontal(rowIndex, colIndex, horizontalLength);
+        // aumentar puntuación
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// eliminar combinación horizontal
+void GameBoard::eliminateHorizontal(int row, int col, int horizontalLength) {
+  for(int index = 0; index < horizontalLength; index++) {
+    eliminateElement(row, col+index);
+  }
+  applyGravity();
+}
+
+// buscar combinaciones de la forma L y T y todas sus rotaciones
+bool GameBoard::searchLT() {
+  std::cout << "Buscando LT " << std::endl;
+  // recorrer la matriz
+  for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
+    for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
+      //tomar elemento 
+      int elementColor = gameMatrix[rowIndex][colIndex];
+      // si el elemento no es 0, existe elemento en esa celda
+      if (elementColor != 0) {
+        bool sameColor = true;
+        int arrayCounter = 0;
+        int rowPosition = rowIndex;
+        int colPosition = colIndex;
+        // mientras no haya encontrado forma LT y hay mas que buscar
+        while(arrayCounter < 8) {
+          for(int rowLTmatrix = 0; rowLTmatrix < 5; rowLTmatrix++) {
+            int rowOffset = this->LTshapes[arrayCounter][rowLTmatrix][0];
+            int colOffset = this->LTshapes[arrayCounter][rowLTmatrix][1];
+            sameColor = isSameColor((rowPosition+rowOffset),(colPosition+colOffset), elementColor);
+            if(sameColor==false){
+              break;  // salir del for loop
+            }
+          }
+          if(sameColor == true) {
+            // eliminar forma LT
+            eliminateLT(arrayCounter, rowIndex, colIndex);
+            // aumentar puntuación
+            return true;
+          } else {
+            arrayCounter++;
+          }
+        }
+
+      }
+    }
+  }
+  return false;
+}
+
+// eliminar forma LT
+void GameBoard::eliminateLT(int shapeNumber, int row, int col) {
+  for (int rowLTmatrix = 0; rowLTmatrix < 5; rowLTmatrix++) {
+    int rowOffset = this->LTshapes[shapeNumber][rowLTmatrix][0];
+    int colOffset = this->LTshapes[shapeNumber][rowLTmatrix][1];
+    eliminateElement((row + rowOffset), (col + colOffset));
+  }
+  applyGravity();
+}
 
 // revisar que no se sale de la matriz
 bool GameBoard::withinMatrix(int row, int col) {
@@ -227,12 +368,15 @@ bool GameBoard::isSameColor(int row, int col, int color) {
   }
 }
 
+// elimina la combinación vertical según el largo pasado
 void GameBoard::eliminateVertical(int row, int col, int lengthToEliminate){
   for(int index = 0; index < lengthToEliminate; index++) {
     eliminateElement(row + index, col);
   }
+  applyGravity();
 }
 
+// elimina un elemento, poniendo su valor en 0
 int GameBoard::eliminateElement(int row, int col) {
   // asegurarse que el elemento a eliminar exista
   if(withinMatrix(row,col)) {
@@ -241,4 +385,24 @@ int GameBoard::eliminateElement(int row, int col) {
   }
   std::cout << "Falló al eliminar elemento" << std::endl;
   return EXIT_FAILURE;
+}
+
+// Gravedad
+int GameBoard::applyGravity() {
+  for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
+    // Mover los elementos hacia abajo en una columna
+    int destinationRow = this->rowSize - 1; // Empezar desde la fila más baja
+    for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) {
+      if (this->gameMatrix[rowIndex][colIndex] != 0) {
+        // Si el elemento no es cero, se mueve a la fila de destino
+        this->gameMatrix[destinationRow][colIndex] = this->gameMatrix[rowIndex][colIndex];
+        // Si la fila de destino es diferente de la fila de origen, se pone el elemento original en cero
+        if (destinationRow != rowIndex) {
+          this->gameMatrix[rowIndex][colIndex] = 0;
+        }
+        destinationRow--; // Mueve la fila de destino hacia arriba
+      }
+    }
+  }
+  return EXIT_SUCCESS;
 }
