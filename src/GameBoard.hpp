@@ -13,6 +13,8 @@ class GameBoard {
     int** gameMatrix;
     // se encontró una combinación
     bool combinationFound = true;
+    // inicializar sistema de puntuacion.
+    int punctuation;
     // matriz con las formas L y T, incluyendo todas sus rotaciones
     int LTshapes[8][5][2] = {
     // 1         2         3         4         5
@@ -69,9 +71,11 @@ class GameBoard {
     void eliminateLT(int shapeNumber, int row, int col);
 
     // aumentar puntuación
+    void pointsSystem(int combinationPoints);
     // aplicar gravedad
     int applyGravity();
     // revisar que hayan jugadas posibles
+    
   public:
     // constructor
     GameBoard(){}

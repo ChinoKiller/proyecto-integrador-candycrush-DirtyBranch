@@ -21,43 +21,85 @@ int GameBoard::runGameBoard() {
     // buscar elementos verticales de 5 o mas de largo
     if (searchBigVertical()) {
       std::cout << "Encontró: vertical de 5 o mas" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // buscar horizontales de 5 o mas de largo
     if (searchBigHorizontal()) {
       std::cout << "Encontró: horizontal de 5 o mas" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // buscar elementos en forma de L y T
     if (searchLT()) {
       std::cout << "Encontró: LT" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // buscar elementos verticales de 4
     if (searchVertical(4)) {
       std::cout << "Encontró: vertical de 4" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // buscar elementos horizontales de 4
     if (searchHorizontal(4)) {
       std::cout << "Encontró: horizontal de 4" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // buscar elementos verticales de 3
     if (searchVertical(3)) {
       std::cout << "Encontró: vertical de 3" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // buscar elementos horizontales de 3
     if (searchHorizontal(3)) {
       std::cout << "Encontró: horizontal de 3" << std::endl;
+      std::cout << "Matriz despues de gravedad." << std::endl;
       printMatrix();
+      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
       continue;
     }
     // si el programa logra llegar hasta aquí es que no encontró combinaciones
@@ -65,9 +107,17 @@ int GameBoard::runGameBoard() {
   }
   // no se encontró combinaciones
   std::cout << "No se encontró mas combinaciones realizadas" << std::endl;
+  // puntos totales
+  std::cout << "Puntos totales : " << punctuation << std::endl;
   // verificar que hayan combinaciones POSIBLES
 
   return EXIT_SUCCESS;
+}
+
+// Funcion para el sistema de puntos.
+void GameBoard::pointsSystem(int combinationPoints) {
+  // Se suma los puntos de la combinacion a los puntos que ya se tienen
+  punctuation = punctuation + combinationPoints;
 }
 
 // leer y verificar tamaño de la matriz 
@@ -191,6 +241,7 @@ bool GameBoard::searchBigVertical(){
         // eliminar vertical de 5 o mas
         eliminateVertical(rowIndex, colIndex, verticalLength);
         // aumentar puntuación
+        pointsSystem(10); // combinaciones verticales de 5 o mas elementos son de 10 puntos.
         return true;
       }
     }
@@ -220,6 +271,7 @@ bool GameBoard::searchVertical(int verticalLength) {
         // eliminar combinación
         eliminateVertical(rowIndex, colIndex, verticalLength);
         // aumentar puntuación
+        pointsSystem(verticalLength * 2); // combinaciones verticales de 3 o 4 elementos son de 6 o 8, respectivamente.
         return true;
       }
     }
@@ -256,6 +308,7 @@ bool GameBoard::searchBigHorizontal() {
         // eliminar horizontal de 5 o mas
         eliminateHorizontal(rowIndex, colIndex, horizontalLength);
         // aumentar puntuación
+        pointsSystem(10); // combinaciones horizontales de 5 o mas elementos son de 10 puntos.
         return true;
       }
     }
@@ -285,6 +338,7 @@ bool GameBoard::searchHorizontal(int horizontalLength) {
         // eliminar combinación
         eliminateHorizontal(rowIndex, colIndex, horizontalLength);
         // aumentar puntuación
+        pointsSystem(horizontalLength * 2);  // combinaciones horizontales de 3 o 4 elementos son de 6 o 8, respectivamente.
         return true;
       }
     }
@@ -328,6 +382,11 @@ bool GameBoard::searchLT() {
             // eliminar forma LT
             eliminateLT(arrayCounter, rowIndex, colIndex);
             // aumentar puntuación
+            if (arrayCounter < 4) {   // las primeras 4 son combinaciones de las L
+              pointsSystem(15); // las combinaciones L son de 15 puntos
+            } else {    // si no son las 4 combinaciones de las L, son las combinaciones de las T
+              pointsSystem(17);  // las combinaciones T son de 17 puntos.
+            }
             return true;
           } else {
             arrayCounter++;
