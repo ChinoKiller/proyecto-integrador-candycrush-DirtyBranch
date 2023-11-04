@@ -21,9 +21,9 @@ int GameBoard::runGameBoard() {
     // buscar elementos verticales de 5 o mas de largo
     if (searchBigVertical()) {
       std::cout << "Encontró: vertical de 5 o mas" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
@@ -33,9 +33,9 @@ int GameBoard::runGameBoard() {
     // buscar horizontales de 5 o mas de largo
     if (searchBigHorizontal()) {
       std::cout << "Encontró: horizontal de 5 o mas" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
@@ -45,9 +45,9 @@ int GameBoard::runGameBoard() {
     // buscar elementos en forma de L y T
     if (searchLT()) {
       std::cout << "Encontró: LT" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
@@ -57,9 +57,9 @@ int GameBoard::runGameBoard() {
     // buscar elementos verticales de 4
     if (searchVertical(4)) {
       std::cout << "Encontró: vertical de 4" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
@@ -69,9 +69,9 @@ int GameBoard::runGameBoard() {
     // buscar elementos horizontales de 4
     if (searchHorizontal(4)) {
       std::cout << "Encontró: horizontal de 4" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
@@ -81,9 +81,9 @@ int GameBoard::runGameBoard() {
     // buscar elementos verticales de 3
     if (searchVertical(3)) {
       std::cout << "Encontró: vertical de 3" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
@@ -93,9 +93,9 @@ int GameBoard::runGameBoard() {
     // buscar elementos horizontales de 3
     if (searchHorizontal(3)) {
       std::cout << "Encontró: horizontal de 3" << std::endl;
-      std::cout << "Matriz despues de gravedad." << std::endl;
+      std::cout << "Matriz después de gravedad." << std::endl;
       printMatrix();
-      std::cout << "Matriz despues de nuevos elementos." << std::endl;
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
       std::cout << "Puntuacion : " << punctuation << std::endl;
