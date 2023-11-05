@@ -6,19 +6,15 @@ GameBoard& GameBoard::getInstance() {
   return GameBoard;
 }
 
-// llama las funciones del GameBoard en el orden necesario
+// Llama las funciones del GameBoard en el orden necesario
 int GameBoard::runGameBoard() {
-  std::cout<<"Running GameBoard" << std::endl;
-  // test para un nivel de 8x8
-  // inicializar matriz
-  initMatrix(8);
-  // generar una matriz de juego random
+  // Generar una matriz de juego random
   generateRandomBoard();
-  // imprimir la matriz
+  // Imprimir la matriz
   printMatrix();
-  // mientras se hayan encontrado combinaciones
+  // Mientras se hayan encontrado combinaciones
   while(this->combinationFound) {
-    // buscar elementos verticales de 5 o mas de largo
+    // Buscar elementos verticales de 5 o mas de largo
     if (searchBigVertical()) {
       std::cout << "Encontró: vertical de 5 o mas" << std::endl;
       std::cout << "Matriz después de gravedad." << std::endl;
@@ -26,7 +22,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -38,7 +34,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -50,7 +46,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -62,7 +58,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -74,7 +70,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -86,7 +82,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -98,7 +94,7 @@ int GameBoard::runGameBoard() {
       std::cout << "Matriz después de nuevos elementos." << std::endl;
       generateRandomNewNumber();
       printMatrix();
-      std::cout << "Puntuacion : " << punctuation << std::endl;
+      std::cout << "Puntuación : " << punctuation << std::endl;
       std::cout << "" << std::endl;
       continue;
     }
@@ -114,9 +110,9 @@ int GameBoard::runGameBoard() {
   return EXIT_SUCCESS;
 }
 
-// Funcion para el sistema de puntos.
+// Función para el sistema de puntos.
 void GameBoard::pointsSystem(int combinationPoints) {
-  // Se suma los puntos de la combinacion a los puntos que ya se tienen
+  // Se suma los puntos de la combinación a los puntos que ya se tienen
   punctuation = punctuation + combinationPoints;
 }
 
@@ -126,7 +122,6 @@ bool GameBoard::readColRowSize(int rowColSize) {
   if ((rowColSize >= 8) && (rowColSize <= 10)) {
     // asignar rowSize y colSize en instancia de GameBoard
     GameBoard::rowSize = GameBoard::colSize = rowColSize;
-    std::cout << "Tamaño valido :D" << std::endl;
     return true;
   }
   std::cout << "Tamaño invalido" << std::endl;
@@ -134,7 +129,7 @@ bool GameBoard::readColRowSize(int rowColSize) {
 }
 
 // crear una matriz según el tamaño del nivel (8x8, 9x9, 10x10)
-int GameBoard::initMatrix(int rowColSize) {
+bool GameBoard::initMatrix(int rowColSize) {
   // revisar tamaño de la matriz y verificar que sea valida
   // si el tamaño es valido, inicializar una matriz de ese tamaño
   if (readColRowSize(rowColSize)) {
@@ -150,11 +145,10 @@ int GameBoard::initMatrix(int rowColSize) {
         this->gameMatrix[rowIndex][colIndex] = 0;
       }
     }
-    std::cout << "Se inicializo matriz!" << std::endl;
-    return EXIT_SUCCESS;
+    return true;
   }
   std::cout << "No se inicializo :(" << std::endl;
-  return EXIT_SUCCESS;
+  return false;
 }
 
 // imprimir matriz de juego
@@ -168,12 +162,15 @@ int GameBoard::printMatrix() {
   return EXIT_SUCCESS;
 }
 
-// destructor
+// Destructor
 GameBoard::~GameBoard() {
-  for (int index = 0; index < this->rowSize; index++) {
-    delete[] gameMatrix[index];
+  // Si se logró inicializar la matriz
+  if(rowSize>0) {
+    for (int index = 0; index < this->rowSize; index++) {
+      delete[] gameMatrix[index];
+    }
+    delete[] gameMatrix;
   }
-  delete[] gameMatrix;
   gameMatrix = nullptr;
 }
 
@@ -212,7 +209,6 @@ int GameBoard::generateRandomNewNumber() {
 
 // buscar verticales de 5 o mas
 bool GameBoard::searchBigVertical(){
-  std::cout << "Buscando Verticales de 5 o mas" << std::endl;
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -251,7 +247,6 @@ bool GameBoard::searchBigVertical(){
 
 // buscar verticales de verticalLength
 bool GameBoard::searchVertical(int verticalLength) {
-  std::cout << "Buscando Verticales " << verticalLength << std::endl;
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -280,7 +275,6 @@ bool GameBoard::searchVertical(int verticalLength) {
 }
 
 bool GameBoard::searchBigHorizontal() {
-  std::cout << "Buscando Horizontal de 5 o mas" << std::endl;
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -318,7 +312,6 @@ bool GameBoard::searchBigHorizontal() {
 
 // buscar horizontales de 4 o 3, según el parámetro
 bool GameBoard::searchHorizontal(int horizontalLength) {
-  std::cout << "Buscando horizontales " << horizontalLength << std::endl;
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -356,7 +349,6 @@ void GameBoard::eliminateHorizontal(int row, int col, int horizontalLength) {
 
 // buscar combinaciones de la forma L y T y todas sus rotaciones
 bool GameBoard::searchLT() {
-  std::cout << "Buscando LT " << std::endl;
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {

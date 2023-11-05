@@ -1,5 +1,10 @@
 #pragma once
 
+// Tamaño del board según el nivel
+#define BOARD_SIZE_PLANETS  9
+#define BOARD_SIZE_PLUTO    8
+#define BOARD_SIZE_SUN     10
+
 // Numero de movimientos por nivel
 #define MOVES_LEVEL_1   30  // Neptuno
 #define MOVES_LEVEL_2   30  // Urano

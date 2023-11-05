@@ -32,7 +32,7 @@ class GameBoard {
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
     // Crear matriz dinámica, retorna int que indica si lo inicializó correctamente
-    int initMatrix(int rowColSize);
+    bool initMatrix(int rowColSize);
     // Imprimir la matriz de juego
     int printMatrix();
     // Generar tablero aleatoriamente
@@ -82,4 +82,9 @@ class GameBoard {
     // Función que maneja todas las funciones del GameBoard
     int runGameBoard();
 
+  // Clase amiga
+  friend class Level;
+  friend class PlanetLevel;
+  friend class SunLevel;
+  friend class PlutoLevel;
 };
