@@ -177,48 +177,106 @@ bool GameBoard::findPosibleCombinations(){
   // ese elemento ir cambiándolo de posición con sus adyacentes y buscar si forma combinaciones.
   for(int rowIndex = 0; rowIndex < rowSize; rowIndex++) {
     for(int colIndex = 0; colIndex < colSize; colIndex++) {
-      int currentElement = this->gameMatrix[rowIndex][colIndex];
-      int auxElement;
       // Revisar si elemento se puede mover arriba
       if(withinMatrix(rowIndex-1, colIndex)) {
-        std::cout << "Antes:" <<std::endl;
+        std::cout << "Antes del cambio:" <<std::endl;
         printMatrix();
         // Mover elemento para arriba
-        // Poner elemento en posición destino en un auxiliar, para no perderlo
-        auxElement = this->gameMatrix[rowIndex-1][colIndex];
-        // Cambiar elemento actual a posición destino (moverlo arriba)
-        this->gameMatrix[rowIndex-1][colIndex] = currentElement;
-        // Elemento que estaba arriba moverlo abajo
-        this->gameMatrix[rowIndex][colIndex] = auxElement;
+        swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
         std::cout<< "MOVER ARRIBA" << std::endl;
         printMatrix();
         // Revisar si hay combinaciones 
         if (searchOrDestroy(SEARCH)) {
           // Devolver elemento a su lugar
-          this->gameMatrix[rowIndex][colIndex] = currentElement;
-          this->gameMatrix[rowIndex-1][colIndex] = auxElement;
+          swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
+          std::cout<< "Devolverlo:" << std::endl;
+          printMatrix();
           return true;
         }
         // Devolver elemento a su lugar
-          this->gameMatrix[rowIndex][colIndex] = currentElement;
-          this->gameMatrix[rowIndex-1][colIndex] = auxElement;
-
+        swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
+        std::cout<< "Devolverlo:" << std::endl;
+        printMatrix();
       }
       // Revisar si elemento se puede mover izquierda
       if(withinMatrix(rowIndex, colIndex-1)) {
-        
+        std::cout << "Antes del cambio:" <<std::endl;
+        printMatrix();
+        // Mover elemento para izquierda
+        swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
+        std::cout<< "MOVER ARRIBA" << std::endl;
+        printMatrix();
+        // Revisar si hay combinaciones 
+        if (searchOrDestroy(SEARCH)) {
+          // Devolver elemento a su lugar
+          swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
+          std::cout<< "Devolverlo:" << std::endl;
+          printMatrix();
+          return true;
+        }
+        // Devolver elemento a su lugar
+        swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
+        std::cout<< "Devolverlo:" << std::endl;
+        printMatrix();
       }
       // Revisar si elemento se puede mover derecha
       if(withinMatrix(rowIndex, colIndex+1)) {
-        
+        std::cout << "Antes del cambio:" <<std::endl;
+        printMatrix();
+        // Mover elemento para derecha
+        swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
+        std::cout<< "MOVER ARRIBA" << std::endl;
+        printMatrix();
+        // Revisar si hay combinaciones 
+        if (searchOrDestroy(SEARCH)) {
+          // Devolver elemento a su lugar
+          swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
+          std::cout<< "Devolverlo:" << std::endl;
+          printMatrix();
+          return true;
+        }
+        // Devolver elemento a su lugar
+        swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
+        std::cout<< "Devolverlo:" << std::endl;
+        printMatrix();
       }
       // Revisar si elemento se puede mover abajo
       if(withinMatrix(rowIndex+1, colIndex)) {
-        
+        std::cout << "Antes del cambio:" <<std::endl;
+        printMatrix();
+        // Mover elemento para abajo
+        swapElement(rowIndex+1, colIndex, rowIndex, colIndex);
+        std::cout<< "MOVER ARRIBA" << std::endl;
+        printMatrix();
+        // Revisar si hay combinaciones 
+        if (searchOrDestroy(SEARCH)) {
+          // Devolver elemento a su lugar
+          swapElement(rowIndex+1, colIndex, rowIndex, colIndex);
+          std::cout<< "Devolverlo:" << std::endl;
+          printMatrix();
+          return true;
+        }
+        // Devolver elemento a su lugar
+        swapElement(rowIndex+1,colIndex, rowIndex, colIndex);
+        std::cout<< "Devolverlo:" << std::endl;
+        printMatrix();
       }
     }
   } 
   return false;
+}
+
+void GameBoard::swapElement(int rowDestination, int colDestination, int rowCurrent, int colCurrent) {
+  // Agarra el elemento actual a ser cambiado
+  int currentElement = this->gameMatrix[rowCurrent][colCurrent];
+  int auxElement;
+  // Poner elemento en posición destino en un auxiliar, para no perderlo
+  auxElement = this->gameMatrix[rowDestination][colDestination];
+  // Cambiar elemento actual a posición destino (moverlo arriba)
+  this->gameMatrix[rowDestination][colDestination] = currentElement;
+  // Elemento que estaba arriba moverlo abajo
+  this->gameMatrix[rowCurrent][colCurrent] = auxElement;
+  // Listo, los elementos ya se intercambiaron de lugar 
 }
 
 // Función para el sistema de puntos.
@@ -474,27 +532,27 @@ void GameBoard::eliminateHorizontal(int row, int col, int horizontalLength) {
   applyGravity();
 }
 
-// buscar combinaciones de la forma L y T y todas sus rotaciones
+// Buscar combinaciones de la forma L y T y todas sus rotaciones
 bool GameBoard::searchLT(enum combinationSetting setSearchOrDestroy) {
-  // recorrer la matriz
+  // Recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
-      //tomar elemento 
+      // Tomar elemento 
       int elementColor = gameMatrix[rowIndex][colIndex];
-      // si el elemento no es 0, existe elemento en esa celda
+      // Si el elemento no es 0, existe elemento en esa celda
       if (elementColor != 0) {
         bool sameColor = true;
         int arrayCounter = 0;
         int rowPosition = rowIndex;
         int colPosition = colIndex;
-        // mientras no haya encontrado forma LT y hay mas que buscar
+        // Mientras no haya encontrado forma LT y hay mas que buscar
         while(arrayCounter < 8) {
           for(int rowLTmatrix = 0; rowLTmatrix < 5; rowLTmatrix++) {
             int rowOffset = this->LTshapes[arrayCounter][rowLTmatrix][0];
             int colOffset = this->LTshapes[arrayCounter][rowLTmatrix][1];
             sameColor = isSameColor((rowPosition+rowOffset),(colPosition+colOffset), elementColor);
             if(sameColor==false){
-              break;  // salir del for loop
+              break;  // Salir del for loop
             }
           }
           if(sameColor == true) {
@@ -521,6 +579,8 @@ bool GameBoard::searchLT(enum combinationSetting setSearchOrDestroy) {
   }
   return false;
 }
+
+
 
 // eliminar forma LT
 void GameBoard::eliminateLT(int shapeNumber, int row, int col) {

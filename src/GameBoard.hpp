@@ -53,6 +53,8 @@ class GameBoard {
     bool searchOrDestroy(enum combinationSetting setSearchOrDestroy);
     // Buscar posibles jugadas
     bool findPosibleCombinations();
+    // Cambiar elementos
+    void swapElement(int rowDestination, int colDestination, int rowCurrent, int colCurrent); 
 
     // Revisar que hayan combinaciones, revisar según prioridad
     // Buscar verticales de 5 o mas
