@@ -6,7 +6,11 @@ enum Menu { MAIN_MENU, LEVEL_MENU, INSTRUCTIONS_MENU, SETTINGS_MENU, EXIT};
 int crrntTxreMsc = 0;   //esto debe estar ligado al booleano de la musica
 int crrntTxreSfx = 0;   // este al booleando de los efectos de sonido
 
-
+int matriz [5][5]={ {4, 2, 3, 4, 5},
+                    {2, 5, 5, 3, 4},
+                    {4, 2, 3, 5, 4},
+                    {5, 2, 2, 4, 2},
+                    {4, 2, 3, 4, 5}};
 
 
 Menu menuP(sf::RenderWindow &window, Menu &currentMenu){
@@ -191,27 +195,28 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
     texturasPlanetasInactivos["urano"] = sf::Texture();
   
     //carga de texturas
-    texture.loadFromFile("./Niveles/fondoNiveles.jpg");
+    texture.loadFromFile("./niveles/fondoNiveles.jpg");
     //encendidos
-    texturasPlanetasActivos["sol"].loadFromFile("./Niveles/Planetas/SolActivo.png");
-    texturasPlanetasActivos["mercurio"].loadFromFile("./Niveles/Planetas/MercurioActivo.png");
-    texturasPlanetasActivos["venus"].loadFromFile("./Niveles/Planetas/VenusActivo.png");
-    texturasPlanetasActivos["tierra"].loadFromFile("./Niveles/Planetas/TierraActivo.png");
-    texturasPlanetasActivos["marte"].loadFromFile("./Niveles/Planetas/MarteActivo.png");
-    texturasPlanetasActivos["jupiter"].loadFromFile("./Niveles/Planetas/JupiterActivo.png");
-    texturasPlanetasActivos["saturno"].loadFromFile("./Niveles/Planetas/SaturnoActivo.png");
-    texturasPlanetasActivos["urano"].loadFromFile("./Niveles/Planetas/UranoActivo.png");
-    texturasPlanetasActivos["neptuno"].loadFromFile("./Niveles/Planetas/NeptunoActivo.png");
+    texturasPlanetasActivos["sol"].loadFromFile("./niveles/Planetas/SolActivo.png");
+    texturasPlanetasActivos["mercurio"].loadFromFile("./niveles/Planetas/MercurioActivo.png");
+    texturasPlanetasActivos["venus"].loadFromFile("./niveles/Planetas/VenusActivo.png");
+    texturasPlanetasActivos["tierra"].loadFromFile("./niveles/Planetas/TierraActivo.png");
+    texturasPlanetasActivos["marte"].loadFromFile("./niveles/Planetas/MarteActivo.png");
+    texturasPlanetasActivos["jupiter"].loadFromFile("./niveles/Planetas/JupiterActivo.png");
+    texturasPlanetasActivos["saturno"].loadFromFile("./niveles/Planetas/SaturnoActivo.png");
+    texturasPlanetasActivos["urano"].loadFromFile("./niveles/Planetas/UranoActivo.png");
+    texturasPlanetasActivos["neptuno"].loadFromFile("./niveles/Planetas/NeptunoActivo.png");
     //apagados
-    texturasPlanetasInactivos["sol"].loadFromFile("./Niveles/Planetas/SolInactivo.png");
-    texturasPlanetasInactivos["mercurio"].loadFromFile("./Niveles/Planetas/MercurioInactivo.png");
-    texturasPlanetasInactivos["venus"].loadFromFile("./Niveles/Planetas/VenusInactivo.png");
-    texturasPlanetasInactivos["tierra"].loadFromFile("./Niveles/Planetas/TierraInactivo.png");
-    texturasPlanetasInactivos["marte"].loadFromFile("./Niveles/Planetas/MarteInactivo.png");
-    texturasPlanetasInactivos["jupiter"].loadFromFile("./Niveles/Planetas/JupiterInactivo.png");
-    texturasPlanetasInactivos["saturno"].loadFromFile("./Niveles/Planetas/SaturnoInactivo.png");
-    texturasPlanetasInactivos["urano"].loadFromFile("./Niveles/Planetas/UranoInactivo.png");
+    texturasPlanetasInactivos["sol"].loadFromFile("./niveles/Planetas/SolInactivo.png");
+    texturasPlanetasInactivos["mercurio"].loadFromFile("./niveles/Planetas/MercurioInactivo.png");
+    texturasPlanetasInactivos["venus"].loadFromFile("./niveles/Planetas/VenusInactivo.png");
+    texturasPlanetasInactivos["tierra"].loadFromFile("./niveles/Planetas/TierraInactivo.png");
+    texturasPlanetasInactivos["marte"].loadFromFile("./niveles/Planetas/MarteInactivo.png");
+    texturasPlanetasInactivos["jupiter"].loadFromFile("./niveles/Planetas/JupiterInactivo.png");
+    texturasPlanetasInactivos["saturno"].loadFromFile("./niveles/Planetas/SaturnoInactivo.png");
+    texturasPlanetasInactivos["urano"].loadFromFile("./niveles/Planetas/UranoInactivo.png");
     
+    /*
     //creacion de sprites
     sf::Sprite sol(texturasPlanetasInactivos["sol"]);
     sf::Sprite mercurio(texturasPlanetasInactivos["mercurio"]);
@@ -247,10 +252,11 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
     saturno.setPosition(525+65, 250);
     urano.setPosition(775, 250);
     neptuno.setPosition(900, 250);
+    */
 
     //textura fondo
+     background.setSize(sf::Vector2f(1280, 720));
     background.setTexture(&texture);
-    
     
     
 
@@ -263,7 +269,8 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
             }
         }
         window.clear();
-     
+          window.draw(background);
+     /*
         //dibujar elementos
         window.draw(background);
         window.draw(sol);
@@ -275,15 +282,86 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
         window.draw(saturno);
         window.draw(urano);
         window.draw(neptuno);
+     */
+
+               // Dibujar la matriz de planetas
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                int planetaID = matriz[i][j]; // Obtén el número de la matriz
+                std::string clave;
+
+                switch (planetaID)
+                {
+                case 1:
+                    clave = "venus";
+                    break;
+                case 2:
+                    clave = "mercurio";
+                    break;
+                case 3:
+                    clave = "venus";
+                    break;
+                case 4:
+                    clave = "tierra";
+                    break;
+                case 5:
+                    clave = "marte";
+                    break;
+                case 6:
+                    clave = "marte";
+                    break;
+                case 7:
+                    clave = "tierra";
+                    break;
+                case 8:
+                    clave = "urano";
+                    break;
+                case 9:
+                    clave = "neptuno";
+                    break;
+                
+                default:
+                    break;
+                }
+
+                // Crea un sprite para el planeta utilizando la textura correspondiente
+                sf::Sprite planetaSprite(texturasPlanetasActivos[clave]);
+
+                // Establece el tamanio
+                planetaSprite.setScale(0.14, 0.14);
+
+                // Establece la posición del sprite en la ventana
+                planetaSprite.setPosition(10 + j * 50, 10 + i * 50);
+
+                // Dibuja el sprite en la ventana
+                window.draw(planetaSprite);
+            }
+        }
+
+
 
 
         window.display();
+
+        sf::sleep(sf::seconds(0.5));
         if (event.type == sf::Event::KeyPressed) {
             if (currentMenu == LEVEL_MENU) {
                 if (event.key.code == sf::Keyboard::Down) {
                     currentMenu = MAIN_MENU;
                 } else if (event.key.code == sf::Keyboard::Up) {
                     currentMenu = EXIT;   
+                } else if (event.key.code == sf::Keyboard::Right) {
+                    for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 5; j++) {
+                            matriz[i][j] += 1; 
+                        }
+                    }
+                } else if (event.key.code == sf::Keyboard::Left) {
+                    for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 5; j++) {
+                            matriz[i][j] -= 1; 
+                        }
+                    }
                 } 
             }
         }
