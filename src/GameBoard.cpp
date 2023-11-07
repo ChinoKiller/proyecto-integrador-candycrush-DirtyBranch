@@ -12,14 +12,26 @@ int GameBoard::runGameBoard() {
   generateRandomBoard();
   // Imprimir la matriz inicial
   printMatrix();
-  // Mientras hayan movimientos - 1, -1 porque hay que eliminar la ultima jugada
-  // Eliminar todas las combinaciones hechas
-  searchOrDestroy(DESTROY);
-  // Revisar que hayan combinaciones posibles
-  // Si hay combinaciones posibles y movimientos restantes
-    // Pedirle al usuario que haga una jugada (restar movimientos)
-  // Si no hay combinaciones posibles y hay movimientos restantes
-    // Generar nueva matriz de juego
+  // Mientras hayan movimientos, move >= 0 porque hay que eliminar la ultima jugada
+  while(this->moves >= 0) {
+    // Eliminar todas las combinaciones hechas
+    searchOrDestroy(DESTROY);
+    // Si no estamos en la ultima ronda
+    if (this->moves > 0) {
+      // Revisar que hayan combinaciones posibles
+      if (findPosibleCombinations()) {
+        // Si hay combinaciones posibles y movimientos restantes
+          // Pedirle al usuario que haga una jugada (restar movimientos)
+        this->moves = this->moves - 1;
+      } else {
+        // Si no hay combinaciones posibles y hay movimientos restantes
+        // Generar nueva matriz de juego
+        generateRandomBoard();
+      }
+    }
+    // Restarle a movimientos para salir del while loop
+    this->moves = this->moves - 1;
+  }
 
   // Puntos totales
   std::cout << "Puntos totales: " << punctuation << std::endl;
@@ -156,6 +168,56 @@ bool GameBoard::searchOrDestroy(enum combinationSetting setSearchOrDestroy) {
     // Salirse del while
     combinationFound = !setSearchOrDestroy;
   }
+  return false;
+}
+
+// Buscar que hayan posibles combinaciones
+bool GameBoard::findPosibleCombinations(){
+  // Atravesar la matriz tomando un elemento a la vez, 
+  // ese elemento ir cambiándolo de posición con sus adyacentes y buscar si forma combinaciones.
+  for(int rowIndex = 0; rowIndex < rowSize; rowIndex++) {
+    for(int colIndex = 0; colIndex < colSize; colIndex++) {
+      int currentElement = this->gameMatrix[rowIndex][colIndex];
+      int auxElement;
+      // Revisar si elemento se puede mover arriba
+      if(withinMatrix(rowIndex-1, colIndex)) {
+        std::cout << "Antes:" <<std::endl;
+        printMatrix();
+        // Mover elemento para arriba
+        // Poner elemento en posición destino en un auxiliar, para no perderlo
+        auxElement = this->gameMatrix[rowIndex-1][colIndex];
+        // Cambiar elemento actual a posición destino (moverlo arriba)
+        this->gameMatrix[rowIndex-1][colIndex] = currentElement;
+        // Elemento que estaba arriba moverlo abajo
+        this->gameMatrix[rowIndex][colIndex] = auxElement;
+        std::cout<< "MOVER ARRIBA" << std::endl;
+        printMatrix();
+        // Revisar si hay combinaciones 
+        if (searchOrDestroy(SEARCH)) {
+          // Devolver elemento a su lugar
+          this->gameMatrix[rowIndex][colIndex] = currentElement;
+          this->gameMatrix[rowIndex-1][colIndex] = auxElement;
+          return true;
+        }
+        // Devolver elemento a su lugar
+          this->gameMatrix[rowIndex][colIndex] = currentElement;
+          this->gameMatrix[rowIndex-1][colIndex] = auxElement;
+
+      }
+      // Revisar si elemento se puede mover izquierda
+      if(withinMatrix(rowIndex, colIndex-1)) {
+        
+      }
+      // Revisar si elemento se puede mover derecha
+      if(withinMatrix(rowIndex, colIndex+1)) {
+        
+      }
+      // Revisar si elemento se puede mover abajo
+      if(withinMatrix(rowIndex+1, colIndex)) {
+        
+      }
+    }
+  } 
   return false;
 }
 
