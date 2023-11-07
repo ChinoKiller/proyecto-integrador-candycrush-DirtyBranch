@@ -10,23 +10,29 @@ class GameBoard {
     int colSize;
     // Matriz dinámica, para que se pueda ajustar según el tamaño del tablero deseado
     int** gameMatrix;
-    // Se encontró una combinación
-    bool combinationFound = true;
     // Inicializar sistema de puntuación
     int punctuation;
+    // Movimientos restantes (DE PRUEBA!!!, hay que implementar que los movimientos se obtengan de nivel)
+    int moves = 1;
     // Matriz con las formas L y T, incluyendo todas sus rotaciones
     int LTshapes[8][5][2] = {
-    // 1         2         3         4         5
-    {{+0, +0}, {+1, +0}, {+2, +0}, {+2, +1}, {+2, +2}},  // L1
-    {{+0, +0}, {+1, +0}, {+2, -2}, {+2, -1}, {+2, +0}},  // L2
-    {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +0}, {+2, +0}},  // L3
-    {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +2}, {+2, +2}},  // L4
-    {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +1}, {+2, +1}},  // T1
-    {{+0, +0}, {+1, +0}, {+2, -1}, {+2, +0}, {+2, +1}},  // T2
-    {{+0, +0}, {+1, +0}, {+1, +1}, {+1, +2}, {+2, +0}},  // T3
-    {{+0, +0}, {+1, -2}, {+1, -1}, {+1, +0}, {+2, +0}},  // T4
-  };
-
+      // 1         2         3         4         5
+      {{+0, +0}, {+1, +0}, {+2, +0}, {+2, +1}, {+2, +2}},  // L1
+      {{+0, +0}, {+1, +0}, {+2, -2}, {+2, -1}, {+2, +0}},  // L2
+      {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +0}, {+2, +0}},  // L3
+      {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +2}, {+2, +2}},  // L4
+      {{+0, +0}, {+0, +1}, {+0, +2}, {+1, +1}, {+2, +1}},  // T1
+      {{+0, +0}, {+1, +0}, {+2, -1}, {+2, +0}, {+2, +1}},  // T2
+      {{+0, +0}, {+1, +0}, {+1, +1}, {+1, +2}, {+2, +0}},  // T3
+      {{+0, +0}, {+1, -2}, {+1, -1}, {+1, +0}, {+2, +0}},  // T4
+    };
+    // Configuración que indica si solo se van a buscar combinaciones 
+    // o si también se van a eliminar las combinaciones encontradas. 
+    enum combinationSetting {
+      SEARCH = 0,
+      DESTROY = 1
+    };
+    
   // Funciones privadas
   private:
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
@@ -43,18 +49,22 @@ class GameBoard {
     bool withinMatrix(int row, int col);
     // Son del mismo color
     bool isSameColor(int row, int col, int color);
+    // Función que busca combinaciones, puede o eliminarlas o solo buscarlas
+    bool searchOrDestroy(enum combinationSetting setSearchOrDestroy);
+    // Buscar posibles jugadas
+    bool findPosibleCombinations();
 
     // Revisar que hayan combinaciones, revisar según prioridad
     // Buscar verticales de 5 o mas
-    bool searchBigVertical();
+    bool searchBigVertical(enum combinationSetting setSearchOrDestroy);
     // Buscar vertical de 4 o 3, según parámetro
-    bool searchVertical(int verticalLength);
+    bool searchVertical(enum combinationSetting setSearchOrDestroy, int verticalLength);
     // Buscar horizontales de 5 o mas
-    bool searchBigHorizontal();
+    bool searchBigHorizontal(enum combinationSetting setSearchOrDestroy);
     // Buscar horizontales de 4 o 3, según el parámetro
-    bool searchHorizontal(int horizontalLength);
+    bool searchHorizontal(enum combinationSetting setSearchOrDestroy, int horizontalLength);
     // Buscar en forma de L y T
-    bool searchLT();
+    bool searchLT(enum combinationSetting setSearchOrDestroy);
 
     // Eliminar combinaciones
     // Eliminar verticales

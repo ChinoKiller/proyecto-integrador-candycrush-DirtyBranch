@@ -10,104 +10,153 @@ GameBoard& GameBoard::getInstance() {
 int GameBoard::runGameBoard() {
   // Generar una matriz de juego random
   generateRandomBoard();
-  // Imprimir la matriz
+  // Imprimir la matriz inicial
   printMatrix();
-  // Mientras se hayan encontrado combinaciones
-  while(this->combinationFound) {
-    // Buscar elementos verticales de 5 o mas de largo
-    if (searchBigVertical()) {
-      std::cout << "Encontró: vertical de 5 o mas" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // buscar horizontales de 5 o mas de largo
-    if (searchBigHorizontal()) {
-      std::cout << "Encontró: horizontal de 5 o mas" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // buscar elementos en forma de L y T
-    if (searchLT()) {
-      std::cout << "Encontró: LT" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // buscar elementos verticales de 4
-    if (searchVertical(4)) {
-      std::cout << "Encontró: vertical de 4" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // buscar elementos horizontales de 4
-    if (searchHorizontal(4)) {
-      std::cout << "Encontró: horizontal de 4" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // buscar elementos verticales de 3
-    if (searchVertical(3)) {
-      std::cout << "Encontró: vertical de 3" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // buscar elementos horizontales de 3
-    if (searchHorizontal(3)) {
-      std::cout << "Encontró: horizontal de 3" << std::endl;
-      std::cout << "Matriz después de gravedad." << std::endl;
-      printMatrix();
-      std::cout << "Matriz después de nuevos elementos." << std::endl;
-      generateRandomNewNumber();
-      printMatrix();
-      std::cout << "Puntuación : " << punctuation << std::endl;
-      std::cout << "" << std::endl;
-      continue;
-    }
-    // si el programa logra llegar hasta aquí es que no encontró combinaciones
-    this->combinationFound = false;
-  }
-  // no se encontró combinaciones
-  std::cout << "No se encontró mas combinaciones realizadas" << std::endl;
-  // puntos totales
-  std::cout << "Puntos totales : " << punctuation << std::endl;
-  // verificar que hayan combinaciones POSIBLES
+  // Mientras hayan movimientos - 1, -1 porque hay que eliminar la ultima jugada
+  // Eliminar todas las combinaciones hechas
+  searchOrDestroy(DESTROY);
+  // Revisar que hayan combinaciones posibles
+  // Si hay combinaciones posibles y movimientos restantes
+    // Pedirle al usuario que haga una jugada (restar movimientos)
+  // Si no hay combinaciones posibles y hay movimientos restantes
+    // Generar nueva matriz de juego
 
+  // Puntos totales
+  std::cout << "Puntos totales: " << punctuation << std::endl;
   return EXIT_SUCCESS;
+}
+
+// Busca combinaciones posibles, las destruye si la configuración indica DESTROY.
+bool GameBoard::searchOrDestroy(enum combinationSetting setSearchOrDestroy) {
+  // DESTROY == 1 o SEARCH == 0
+  bool combinationFound = setSearchOrDestroy;
+  // DESTROY, mientras hayan combinaciones que destruir seguir eliminando las combinaciones.
+  // SEARCH, entra al mientras solo una vez. Dentro de la función retorna true si encontró alguna combinación.
+  // o se sale del while y retorna false si no se encontró ninguna combinación.
+  while(combinationFound == setSearchOrDestroy) {
+    // Buscar elementos verticales de 5 o mas de largo
+    if (searchBigVertical(setSearchOrDestroy)) {
+      std::cout << "Encontró: vertical de 5 o mas" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // Buscar horizontales de 5 o mas de largo
+    if (searchBigHorizontal(setSearchOrDestroy)) {
+      std::cout << "Encontró: horizontal de 5 o mas" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // Buscar elementos en forma de L y T
+    if (searchLT(setSearchOrDestroy)) {
+      std::cout << "Encontró: LT" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // Buscar elementos verticales de 4
+    if (searchVertical(setSearchOrDestroy, 4)) {
+      std::cout << "Encontró: vertical de 4" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      // Si llega aquí se encuentra en en modo eliminación 
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // Buscar elementos horizontales de 4
+    if (searchHorizontal(setSearchOrDestroy, 4)) {
+      std::cout << "Encontró: horizontal de 4" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      // Si llega aquí se encuentra en en modo eliminación 
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // Buscar elementos verticales de 3
+    if (searchVertical(setSearchOrDestroy, 3)) {
+      std::cout << "Encontró: vertical de 3" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      // Si llega aquí se encuentra en en modo eliminación 
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // Buscar elementos horizontales de 3
+    if (searchHorizontal(setSearchOrDestroy, 3)) {
+      std::cout << "Encontró: horizontal de 3" << std::endl;
+      // Si estoy en modo solo búsqueda retorna que se encontró combinación
+      if (setSearchOrDestroy == SEARCH) {
+        return true;
+      }
+      // Si llega aquí se encuentra en en modo eliminación 
+      std::cout << "Matriz después de gravedad." << std::endl;
+      printMatrix();
+      std::cout << "Matriz después de nuevos elementos." << std::endl;
+      generateRandomNewNumber();
+      printMatrix();
+      std::cout << "Puntuación : " << punctuation << std::endl;
+      std::cout << "" << std::endl;
+      continue;
+    }
+    // No se encontró combinaciones
+    // Si el programa logra llegar hasta aquí es que no encontró combinaciones
+    std::cout << "No se encontró combinaciones realizadas" << std::endl;
+    // Salirse del while
+    combinationFound = !setSearchOrDestroy;
+  }
+  return false;
 }
 
 // Función para el sistema de puntos.
@@ -208,7 +257,7 @@ int GameBoard::generateRandomNewNumber() {
 }
 
 // buscar verticales de 5 o mas
-bool GameBoard::searchBigVertical(){
+bool GameBoard::searchBigVertical(enum combinationSetting setSearchOrDestroy){
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -234,11 +283,15 @@ bool GameBoard::searchBigVertical(){
         }
       }
       if (verticalLength >= 5) {
-        // eliminar vertical de 5 o mas
-        eliminateVertical(rowIndex, colIndex, verticalLength);
-        // aumentar puntuación
-        pointsSystem(10); // combinaciones verticales de 5 o mas elementos son de 10 puntos.
-        return true;
+        if (setSearchOrDestroy == SEARCH) {
+          return true;
+        } else {
+          // eliminar vertical de 5 o mas
+          eliminateVertical(rowIndex, colIndex, verticalLength);
+          // aumentar puntuación
+          pointsSystem(10); // combinaciones verticales de 5 o mas elementos son de 10 puntos.
+          return true;
+        }
       }
     }
   }
@@ -246,7 +299,7 @@ bool GameBoard::searchBigVertical(){
 }
 
 // buscar verticales de verticalLength
-bool GameBoard::searchVertical(int verticalLength) {
+bool GameBoard::searchVertical(enum combinationSetting setSearchOrDestroy, int verticalLength) {
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -263,18 +316,22 @@ bool GameBoard::searchVertical(int verticalLength) {
       }
       // si el bool sameColor sigue como verdadero, ya encontré una combinación de verticalLength
       if (sameColor) {
-        // eliminar combinación
-        eliminateVertical(rowIndex, colIndex, verticalLength);
-        // aumentar puntuación
-        pointsSystem(verticalLength * 2); // combinaciones verticales de 3 o 4 elementos son de 6 o 8, respectivamente.
-        return true;
+        if (setSearchOrDestroy == SEARCH) {
+          return true;
+        } else {
+          // eliminar combinación
+          eliminateVertical(rowIndex, colIndex, verticalLength);
+          // aumentar puntuación
+          pointsSystem(verticalLength * 2); // combinaciones verticales de 3 o 4 elementos son de 6 o 8, respectivamente.
+          return true;
+        }
       }
     }
   }
   return false;
 }
 
-bool GameBoard::searchBigHorizontal() {
+bool GameBoard::searchBigHorizontal(enum combinationSetting setSearchOrDestroy) {
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -299,11 +356,15 @@ bool GameBoard::searchBigHorizontal() {
         }
       }
       if (horizontalLength >= 5) {
-        // eliminar horizontal de 5 o mas
-        eliminateHorizontal(rowIndex, colIndex, horizontalLength);
-        // aumentar puntuación
-        pointsSystem(10); // combinaciones horizontales de 5 o mas elementos son de 10 puntos.
-        return true;
+        if (setSearchOrDestroy == SEARCH) {
+          return true;
+        } else {
+          // eliminar horizontal de 5 o mas
+          eliminateHorizontal(rowIndex, colIndex, horizontalLength);
+          // aumentar puntuación
+          pointsSystem(10); // combinaciones horizontales de 5 o mas elementos son de 10 puntos.
+          return true;
+        }
       }
     }
   }
@@ -311,7 +372,7 @@ bool GameBoard::searchBigHorizontal() {
 }
 
 // buscar horizontales de 4 o 3, según el parámetro
-bool GameBoard::searchHorizontal(int horizontalLength) {
+bool GameBoard::searchHorizontal(enum combinationSetting setSearchOrDestroy, int horizontalLength) {
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -328,11 +389,15 @@ bool GameBoard::searchHorizontal(int horizontalLength) {
       }
       // si el bool sameColor sigue como verdadero, ya encontré una combinación de horizontalLength
       if (sameColor) {
-        // eliminar combinación
-        eliminateHorizontal(rowIndex, colIndex, horizontalLength);
-        // aumentar puntuación
-        pointsSystem(horizontalLength * 2);  // combinaciones horizontales de 3 o 4 elementos son de 6 o 8, respectivamente.
-        return true;
+        if (setSearchOrDestroy == SEARCH) {
+          return true;
+        } else {
+          // eliminar combinación
+          eliminateHorizontal(rowIndex, colIndex, horizontalLength);
+          // aumentar puntuación
+          pointsSystem(horizontalLength * 2);  // combinaciones horizontales de 3 o 4 elementos son de 6 o 8, respectivamente.
+          return true;
+        }
       }
     }
   }
@@ -348,7 +413,7 @@ void GameBoard::eliminateHorizontal(int row, int col, int horizontalLength) {
 }
 
 // buscar combinaciones de la forma L y T y todas sus rotaciones
-bool GameBoard::searchLT() {
+bool GameBoard::searchLT(enum combinationSetting setSearchOrDestroy) {
   // recorrer la matriz
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
@@ -371,15 +436,19 @@ bool GameBoard::searchLT() {
             }
           }
           if(sameColor == true) {
-            // eliminar forma LT
-            eliminateLT(arrayCounter, rowIndex, colIndex);
-            // aumentar puntuación
-            if (arrayCounter < 4) {   // las primeras 4 son combinaciones de las L
-              pointsSystem(15); // las combinaciones L son de 15 puntos
-            } else {    // si no son las 4 combinaciones de las L, son las combinaciones de las T
-              pointsSystem(17);  // las combinaciones T son de 17 puntos.
-            }
+            if (setSearchOrDestroy == SEARCH) {
             return true;
+          } else {
+              // eliminar forma LT
+              eliminateLT(arrayCounter, rowIndex, colIndex);
+              // aumentar puntuación
+              if (arrayCounter < 4) {   // las primeras 4 son combinaciones de las L
+                pointsSystem(15); // las combinaciones L son de 15 puntos
+              } else {    // si no son las 4 combinaciones de las L, son las combinaciones de las T
+                pointsSystem(17);  // las combinaciones T son de 17 puntos.
+              }
+              return true;
+          }
           } else {
             arrayCounter++;
           }
