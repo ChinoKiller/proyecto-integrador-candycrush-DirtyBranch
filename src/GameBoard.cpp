@@ -292,9 +292,14 @@ void GameBoard::play() {
     }
   }
   // Intercambiar 
-  swapElement(rowCurrent, colCurrent, rowCurrent, colDestination);
+  swapElement(rowCurrent, colCurrent, rowDestination, colDestination);
   std::cout << "After Swap" << std::endl;
   printMatrix();
+  if (!searchOrDestroy(DESTROY)) {
+    std::cout << "No combinations, undo swap" << std::endl;
+    swapElement(rowDestination, colDestination, rowCurrent, colCurrent);
+    printMatrix();
+  }
 }
 
 bool GameBoard::elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination) {
@@ -315,14 +320,14 @@ bool GameBoard::elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDesti
 
 void GameBoard::swapElement(int rowDestination, int colDestination, int rowCurrent, int colCurrent) {
   // Agarra el elemento actual a ser cambiado
-  int currentElement = this->gameMatrix[rowCurrent][colCurrent];
+  int currentElement = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowCurrent,colCurrent);
   int auxElement;
   // Poner elemento en posición destino en un auxiliar, para no perderlo
-  auxElement = this->gameMatrix[rowDestination][colDestination];
+  auxElement = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowDestination,colDestination);
   // Cambiar elemento actual a posición destino (moverlo arriba)
-  this->gameMatrix[rowDestination][colDestination] = currentElement;
+  _setValue(this->gameMatrix, this->rowSize, this->colSize, rowDestination, colDestination, currentElement);
   // Elemento que estaba arriba moverlo abajo
-  this->gameMatrix[rowCurrent][colCurrent] = auxElement;
+  _setValue(this->gameMatrix, this->rowSize, this->colSize, rowCurrent, colCurrent, auxElement);
   // Listo, los elementos ya se intercambiaron de lugar 
 }
 
@@ -344,23 +349,17 @@ bool GameBoard::readColRowSize(int rowColSize) {
   return false;
 }
 
+
 // crear una matriz según el tamaño del nivel (8x8, 9x9, 10x10)
 bool GameBoard::initMatrix(int rowColSize) {
   // revisar tamaño de la matriz y verificar que sea valida
   // si el tamaño es valido, inicializar una matriz de ese tamaño
   if (readColRowSize(rowColSize)) {
-    // inicializar filas
-    this->gameMatrix = new int*[rowSize];
-    // inicializar columnas
-    for (int index = 0; index < this->rowSize; ++index) {
-      this->gameMatrix[index] = new int [colSize];
-    }
-    // poner todos los valores en 0
-    for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
-      for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
-        this->gameMatrix[rowIndex][colIndex] = 0;
-      }
-    }
+    // guardar memoria matriz (matriz cuadrada)
+    this->gameMatrix = new int[rowColSize * rowColSize]; 
+    // llamar a la funcion que inicializa la matriz en 0
+    _initMatrix(this->gameMatrix, rowColSize);
+    std::cout << "Se inicializo matriz!" << std::endl;
     return true;
   }
   std::cout << "No se inicializo :(" << std::endl;
@@ -371,35 +370,27 @@ bool GameBoard::initMatrix(int rowColSize) {
 int GameBoard::printMatrix() {
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
-      std::cout << this->gameMatrix[rowIndex][colIndex] << " ";
+      //std::cout << this->gameMatrix[rowIndex][colIndex] << " ";
+      std::cout<<_getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex) << " ";
     }
     std::cout<<std::endl;
-  }
+  } 
   return EXIT_SUCCESS;
 }
 
-// Destructor
+// destructor
 GameBoard::~GameBoard() {
-  // Si se logró inicializar la matriz
-  if(rowSize>0) {
-    for (int index = 0; index < this->rowSize; index++) {
-      delete[] gameMatrix[index];
-    }
-    delete[] gameMatrix;
-  }
+  delete[] gameMatrix;
   gameMatrix = nullptr;
 }
 
 // generar elementos de la matriz de forma aleatoria
 int GameBoard::generateRandomBoard() {
-  std::random_device randomGenerator;
-  std::mt19937 gen(randomGenerator());
-  std::uniform_int_distribution<int> intDistribution(1,6);
 
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
-      int pseudoRandomNum = intDistribution(gen);
-      this->gameMatrix[rowIndex][colIndex] = pseudoRandomNum;
+      int pseudoRandomNum = generateNumberAtRandom();
+      _setValue(this->gameMatrix, this->rowSize, this->colSize, rowIndex, colIndex, pseudoRandomNum);
     }
   }
   return EXIT_SUCCESS;
@@ -407,21 +398,28 @@ int GameBoard::generateRandomBoard() {
 
 // Generar números aleatorios (Para después de la gravedad).
 int GameBoard::generateRandomNewNumber() {
-  std::random_device randomGenerator;
-  std::mt19937 gen(randomGenerator());
-  std::uniform_int_distribution<int> intDistribution(1,6);
 
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
       // si la celda esta vacía, generar un elemento random
-      if (this->gameMatrix[rowIndex][colIndex] == 0) {
-        int pseudoRandomNum = intDistribution(gen);
-        this->gameMatrix[rowIndex][colIndex] = pseudoRandomNum;
+      if (_getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex) == 0) {
+        int pseudoRandomNum = generateNumberAtRandom();
+        _setValue(this->gameMatrix, this->rowSize, this->colSize, rowIndex, colIndex, pseudoRandomNum);
       }
     }
   }
   return EXIT_SUCCESS;
 }
+
+
+//genera un numero aleatorio
+int GameBoard::generateNumberAtRandom(){
+  std::random_device randomGenerator;
+  std::mt19937 gen(randomGenerator());
+  std::uniform_int_distribution<int> intDistribution(1,6);
+  return intDistribution(gen);
+}
+
 
 // buscar verticales de 5 o mas
 bool GameBoard::searchBigVertical(enum combinationSetting setSearchOrDestroy){
@@ -429,7 +427,7 @@ bool GameBoard::searchBigVertical(enum combinationSetting setSearchOrDestroy){
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
       // tomar un elemento
-      int elementColor = gameMatrix[rowIndex][colIndex];
+      int elementColor = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
       int rowPosition = rowIndex;
       //int colPosition = colIndex;
       bool sameColor = true;
@@ -471,7 +469,7 @@ bool GameBoard::searchVertical(enum combinationSetting setSearchOrDestroy, int v
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
       // tomar un elemento
-      int elementColor = gameMatrix[rowIndex][colIndex];
+      int elementColor = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
       int rowPosition = rowIndex;
       bool sameColor = true;
       // verificar si ese elemento tiene combinación vertical de verticalLength
@@ -503,7 +501,7 @@ bool GameBoard::searchBigHorizontal(enum combinationSetting setSearchOrDestroy) 
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
       // tomar un elemento
-      int elementColor = gameMatrix[rowIndex][colIndex];
+      int elementColor = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
       int colPosition = colIndex;
       bool sameColor = true;
       int horizontalLength = 0;
@@ -544,7 +542,7 @@ bool GameBoard::searchHorizontal(enum combinationSetting setSearchOrDestroy, int
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
       // tomar un elemento
-      int elementColor = gameMatrix[rowIndex][colIndex];
+      int elementColor = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
       int colPosition = colIndex;
       bool sameColor = true;
       // verificar si ese elemento tiene combinación horizontal de horizontalLength
@@ -585,7 +583,7 @@ bool GameBoard::searchLT(enum combinationSetting setSearchOrDestroy) {
   for (int rowIndex = 0; rowIndex < this->rowSize; rowIndex++) {
     for (int colIndex = 0; colIndex < this->colSize; colIndex++) {
       // Tomar elemento 
-      int elementColor = gameMatrix[rowIndex][colIndex];
+      int elementColor = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
       // Si el elemento no es 0, existe elemento en esa celda
       if (elementColor != 0) {
         bool sameColor = true;
@@ -653,7 +651,7 @@ bool GameBoard::isSameColor(int row, int col, int color) {
   if((withinMatrix(row, col) == false) || (color == 0)) {
     return false;
   } else {
-    return(gameMatrix[row][col] == color);
+    return _isSameColor(this->gameMatrix,row,col,color,this->rowSize);
   }
 }
 
@@ -669,7 +667,7 @@ void GameBoard::eliminateVertical(int row, int col, int lengthToEliminate){
 int GameBoard::eliminateElement(int row, int col) {
   // asegurarse que el elemento a eliminar exista
   if(withinMatrix(row,col)) {
-    gameMatrix[row][col] = 0;
+    _setValue(this->gameMatrix,this->rowSize,this->colSize,row,col,0);
     return EXIT_SUCCESS;
   }
   std::cout << "Falló al eliminar elemento" << std::endl;
@@ -682,12 +680,15 @@ int GameBoard::applyGravity() {
     // Mover los elementos hacia abajo en una columna
     int destinationRow = this->rowSize - 1; // Empezar desde la fila más baja
     for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) {
-      if (this->gameMatrix[rowIndex][colIndex] != 0) {
+      int cellValue = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
+      if (cellValue!= 0) {
         // Si el elemento no es cero, se mueve a la fila de destino
-        this->gameMatrix[destinationRow][colIndex] = this->gameMatrix[rowIndex][colIndex];
+        _setValue(this->gameMatrix,this->rowSize,this->colSize,destinationRow,colIndex, cellValue);
+        //this->gameMatrix[destinationRow * this->rowSize + colIndex] = this->gameMatrix[rowIndex * this->rowSize + colIndex];
         // Si la fila de destino es diferente de la fila de origen, se pone el elemento original en cero
         if (destinationRow != rowIndex) {
-          this->gameMatrix[rowIndex][colIndex] = 0;
+          //this->gameMatrix[rowIndex * this->rowSize + colIndex] = 0;
+          _setValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex,0);
         }
         destinationRow--; // Mueve la fila de destino hacia arriba
       }

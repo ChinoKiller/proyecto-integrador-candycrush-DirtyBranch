@@ -1,5 +1,15 @@
+#pragma once
 #include <iostream>
 #include <random>
+
+//declaracion funciones ensambla
+extern "C" {
+    void _initMatrix(int* matriz, int size);
+    void _setValue(int* matriz, int rows, int cols, int row, int col, int value);
+    bool _isSameColor(int* matriz, int row, int col, int color, int tam);
+    int _getCellValue(int* matriz, int rows, int cols, int row, int col);
+}
+
 
 // clase GameBoard
 class GameBoard {
@@ -9,7 +19,7 @@ class GameBoard {
     // Tamaño de las columnas de la matriz
     int colSize;
     // Matriz dinámica, para que se pueda ajustar según el tamaño del tablero deseado
-    int** gameMatrix;
+    int* gameMatrix;
     // Inicializar sistema de puntuación
     int punctuation;
     // Movimientos restantes (DE PRUEBA!!!, hay que implementar que los movimientos se obtengan de nivel)
@@ -59,7 +69,8 @@ class GameBoard {
     void play();
     // Revisar si 2 elementos son adyacentes
     bool elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
-
+    //genera un numero aleatorio del 1 al 6
+    int generateNumberAtRandom();
     // Revisar que hayan combinaciones, revisar según prioridad
     // Buscar verticales de 5 o mas
     bool searchBigVertical(enum combinationSetting setSearchOrDestroy);

@@ -1,6 +1,7 @@
 #pragma once
 #include "Level.hpp"
 
+
 // Clase para los niveles de los planetas (9x9)
 class PlanetLevel : public Level {
   protected:

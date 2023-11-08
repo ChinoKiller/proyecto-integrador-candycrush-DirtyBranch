@@ -1,8 +1,8 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "GameBoard.hpp"
-#include "DEFINITIONS.HPP"
+#include "../GameBoard.hpp"
+#include "../DEFINITIONS.HPP"
 
 // Clase Level
 class Level {

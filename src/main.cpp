@@ -1,7 +1,8 @@
 #include "Levels/Level.hpp"
 #include "Levels/PlanetLevel.hpp"
 #include "Levels/SunLevel.hpp"
-#include "PlutoLevel.hpp"
+#include "Levels/PlutoLevel.hpp"
+#include "GameBoard.hpp"
 
 int main() {
   // Nivel que quiero iniciar

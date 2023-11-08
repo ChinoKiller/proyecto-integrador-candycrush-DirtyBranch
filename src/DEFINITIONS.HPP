@@ -14,8 +14,8 @@
 #define MOVES_LEVEL_6   30  // Tierra
 #define MOVES_LEVEL_7   30  // Venus
 #define MOVES_LEVEL_8   30  // Mercurio
-#define MOVES_LEVEL_9   30  // Sol
-#define MOVES_LEVEL_10  30  // Plutón
+#define MOVES_LEVEL_9   35  // Sol
+#define MOVES_LEVEL_10  25  // Plutón
 
 // Puntuación a alcanzar en cada nivel
 #define GOAL_SCORE_1    50
