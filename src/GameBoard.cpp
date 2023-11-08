@@ -45,15 +45,11 @@ int GameBoard::runGameBoard() {
 }
 
 /**/
-  void GameBoard::showWindow(){
-     
-     //sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
-     //VentanaJuego graficos(window, this->rowSize, this->colSize, this->gameMatrix);
-  }
-
-
-
-
+void GameBoard::showWindow(){
+    
+    //sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
+    //VentanaJuego graficos(window, this->rowSize, this->colSize, this->gameMatrix);
+}
 
 
 // Busca combinaciones posibles, las destruye si la configuración indica DESTROY.
@@ -182,7 +178,6 @@ bool GameBoard::searchOrDestroy(enum combinationSetting setSearchOrDestroy) {
     }
     // No se encontró combinaciones
     // Si el programa logra llegar hasta aquí es que no encontró combinaciones
-    std::cout << "No se encontró combinaciones realizadas" << std::endl;
     // Salirse del while
     combinationFound = !setSearchOrDestroy;
   }
@@ -312,7 +307,7 @@ void GameBoard::play() {
   swapElement(rowCurrent, colCurrent, rowDestination, colDestination);
   std::cout << "After Swap" << std::endl;
   printMatrix();
-  if (!searchOrDestroy(DESTROY)) {
+  if (!searchOrDestroy(SEARCH)) {
     std::cout << "No combinations, undo swap" << std::endl;
     swapElement(rowDestination, colDestination, rowCurrent, colCurrent);
     printMatrix();
