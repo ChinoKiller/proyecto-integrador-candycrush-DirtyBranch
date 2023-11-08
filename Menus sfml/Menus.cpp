@@ -5,8 +5,7 @@
 #include <random>
 #include <ctime>
 
-//kevin.ramirezbarboza
-//REmix@gamer070404
+
 enum Menu { MAIN_MENU, LEVEL_MENU, INSTRUCTIONS_MENU, SETTINGS_MENU, EXIT, TABLERO};
 int crrntTxreMsc = 0;   //esto debe estar ligado al booleano de la musica
 int crrntTxreSfx = 0;   // este al booleando de los efectos de sonido
@@ -96,7 +95,7 @@ void dibujarMatriz(sf::RenderWindow &window, int filas, int columnas, int celdaA
 
             sf::Sprite alienSprite(texturasAliens[clave]);
             alienSprite.setScale(0.5, 0.5);
-            alienSprite.setPosition(j * celdaAncho +390, i * celdaAlto +110);
+            alienSprite.setPosition(j * celdaAncho +690, i * celdaAlto +110);
 
             window.draw(alienSprite);
         }
@@ -511,9 +510,50 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
 Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
     VentanaJuegos datos;
     sf::RectangleShape board;
-    board.setSize(sf::Vector2f(550, 550));
+    sf::Sprite planet;
+    sf::Texture texturePLanet;
+    sf::Font font;
+    
+    sf::Text textPlanets;
+    sf::Text textMovimientos;
+    sf::Text textScore;
+    sf::Text textNext;
+
+    texturePLanet.loadFromFile("./niveles/Planetas/VenusActivo.png");
+    font.loadFromFile("./Fuentes/prstart.ttf");
+
+    textPlanets.setFont(font);
+    textPlanets.setString("Venus");
+    textPlanets.setCharacterSize(36);
+    textPlanets.setFillColor(sf::Color::White);
+    textPlanets.setPosition(50, 50);  // Coordenas X e Y
+
+    planet.setTexture(texturePLanet);
+    planet.setScale(0.35, 0.35);
+    planet.setPosition(70, 105);
+
+    textMovimientos.setFont(font);
+    textMovimientos.setString("Movimientos Restantes =");
+    textMovimientos.setCharacterSize(20);
+    textMovimientos.setFillColor(sf::Color::White);
+    textMovimientos.setPosition(50, 250);  // Coordenas X e Y
+
+    textScore.setFont(font);
+    textScore.setString("Puntaje =");
+    textScore.setCharacterSize(20);
+    textScore.setFillColor(sf::Color::White);
+    textScore.setPosition(50, 450-50);  // Coordenas X e Y
+
+    textNext.setFont(font);
+    textNext.setString("Siguiente Nivel =");
+    textNext.setCharacterSize(20);
+    textNext.setFillColor(sf::Color::White);
+    textNext.setPosition(50, 650-100);  // Coordenas X e Y
+
+
+    board.setSize(sf::Vector2f(540, 540));
     board.setFillColor(sf::Color(128, 128, 128));
-    board.setPosition(390-25, 110-25);
+    board.setPosition(390-25+300, 110-25);
 
     sf::Texture textureFondo;
     textureFondo.loadFromFile("./menuPrincipal/menuFondo1.png");
@@ -524,6 +564,14 @@ Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
         window.clear();
         window.draw(fondo);
         window.draw(board);
+        window.draw(textPlanets);
+        window.draw(textMovimientos);
+        window.draw(textScore);
+        window.draw(textNext);
+        window.draw(planet);
+
+
+
         dibujarMatriz(window, datos.filas,  datos.columnas,  datos.celdaAncho,  datos.celdaAlto);
         
         while (window.pollEvent(event)) {
