@@ -21,7 +21,8 @@ int GameBoard::runGameBoard() {
       // Revisar que hayan combinaciones posibles
       if (findPosibleCombinations()) {
         // Si hay combinaciones posibles y movimientos restantes
-          // Pedirle al usuario que haga una jugada (restar movimientos)
+        // Pedirle al usuario que haga una jugada (restar movimientos)
+        play();
         this->moves = this->moves - 1;
       } else {
         // Si no hay combinaciones posibles y hay movimientos restantes
@@ -179,92 +180,138 @@ bool GameBoard::findPosibleCombinations(){
     for(int colIndex = 0; colIndex < colSize; colIndex++) {
       // Revisar si elemento se puede mover arriba
       if(withinMatrix(rowIndex-1, colIndex)) {
-        std::cout << "Antes del cambio:" <<std::endl;
-        printMatrix();
         // Mover elemento para arriba
         swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
-        std::cout<< "MOVER ARRIBA" << std::endl;
-        printMatrix();
         // Revisar si hay combinaciones 
         if (searchOrDestroy(SEARCH)) {
           // Devolver elemento a su lugar
           swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
-          std::cout<< "Devolverlo:" << std::endl;
-          printMatrix();
           return true;
         }
         // Devolver elemento a su lugar
         swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
-        std::cout<< "Devolverlo:" << std::endl;
-        printMatrix();
       }
       // Revisar si elemento se puede mover izquierda
       if(withinMatrix(rowIndex, colIndex-1)) {
-        std::cout << "Antes del cambio:" <<std::endl;
-        printMatrix();
         // Mover elemento para izquierda
         swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
-        std::cout<< "MOVER ARRIBA" << std::endl;
-        printMatrix();
         // Revisar si hay combinaciones 
         if (searchOrDestroy(SEARCH)) {
           // Devolver elemento a su lugar
           swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
-          std::cout<< "Devolverlo:" << std::endl;
-          printMatrix();
           return true;
         }
         // Devolver elemento a su lugar
         swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
-        std::cout<< "Devolverlo:" << std::endl;
-        printMatrix();
       }
       // Revisar si elemento se puede mover derecha
       if(withinMatrix(rowIndex, colIndex+1)) {
-        std::cout << "Antes del cambio:" <<std::endl;
-        printMatrix();
         // Mover elemento para derecha
         swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
-        std::cout<< "MOVER ARRIBA" << std::endl;
-        printMatrix();
         // Revisar si hay combinaciones 
         if (searchOrDestroy(SEARCH)) {
           // Devolver elemento a su lugar
           swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
-          std::cout<< "Devolverlo:" << std::endl;
-          printMatrix();
           return true;
         }
         // Devolver elemento a su lugar
         swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
-        std::cout<< "Devolverlo:" << std::endl;
-        printMatrix();
       }
       // Revisar si elemento se puede mover abajo
       if(withinMatrix(rowIndex+1, colIndex)) {
-        std::cout << "Antes del cambio:" <<std::endl;
-        printMatrix();
         // Mover elemento para abajo
         swapElement(rowIndex+1, colIndex, rowIndex, colIndex);
-        std::cout<< "MOVER ARRIBA" << std::endl;
-        printMatrix();
         // Revisar si hay combinaciones 
         if (searchOrDestroy(SEARCH)) {
           // Devolver elemento a su lugar
           swapElement(rowIndex+1, colIndex, rowIndex, colIndex);
-          std::cout<< "Devolverlo:" << std::endl;
-          printMatrix();
           return true;
         }
         // Devolver elemento a su lugar
         swapElement(rowIndex+1,colIndex, rowIndex, colIndex);
-        std::cout<< "Devolverlo:" << std::endl;
-        printMatrix();
       }
     }
   } 
   return false;
 }
+
+void GameBoard::play() {
+  int rowCurrent, colCurrent;
+  bool keepReading = true;
+  // Mientras el input sea incorrecto, seguir preguntando
+  std::cout << "₊˚⊹ ⋆ Ingrese fila y columnas separados de espacios ₊˚⊹ ⋆" << std::endl;
+  while(keepReading) {
+    std::cout << "★ Posición del elemento que quiere cambiar: " << std::endl;
+    // Si logra leer bien dos valores enteros
+    if(std::cin >> rowCurrent >> colCurrent) {
+      // Verificar que input este correcto
+      switch (withinMatrix(rowCurrent, colCurrent)) {
+        case true:
+          // Si input es correcto, no seguir preguntando
+          keepReading = false;
+          break;
+        case false:
+          // Si el input es incorrecto, imprimir mensaje y seguir preguntando
+          std::cout << "Ingrese filas y columnas válidas (╥﹏╥)" << std::endl;
+          break;
+      }
+    } else {
+      std::cin.clear();    // Limpiar el estado de error
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descartar entrada inválida
+      std::cout << "Ingrese números válidos pls (╥﹏╥)" << std::endl;
+    }
+  }
+  
+  keepReading = true;
+  int rowDestination, colDestination;
+  while(keepReading) {
+    std::cout << "★ Posición posición destino: " << std::endl;
+    // Si logra leer bien dos valores enteros
+    if(std::cin >> rowDestination >> colDestination) {
+      // Verificar que input este dentro del rango de la matriz
+      switch (withinMatrix(rowDestination, rowDestination)) {
+        case true:
+          // Revisar si son adyacentes
+          if (elementsAreAdjacent(rowCurrent, colCurrent, rowDestination, colDestination)) {
+            // Si input es correcto, no seguir preguntando
+            keepReading = false;
+            break;
+          } else {
+            std::cout << "Elementos no son adyacentes! (╥﹏╥)" << std::endl;
+          }
+          break;
+        case false:
+          // Si el input es incorrecto, imprimir mensaje y seguir preguntando
+          std::cout << "Ingrese filas y columnas válidas (╥﹏╥)" << std::endl;
+          break;
+      }
+    } else {
+      std::cin.clear();    // Limpiar el estado de error
+      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descartar entrada inválida
+      std::cout << "Ingrese números válidos pls (╥﹏╥)" << std::endl;
+    }
+  }
+  // Intercambiar 
+  swapElement(rowCurrent, colCurrent, rowCurrent, colDestination);
+  std::cout << "After Swap" << std::endl;
+  printMatrix();
+}
+
+bool GameBoard::elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination) {
+  if(rowCurrent == rowDestination) {
+    // Izquierda o derecha
+    if((colCurrent-1 == colDestination) || (colCurrent+1 == colDestination)){
+      return true;
+    }
+  } else if (colCurrent == colDestination) {
+    // Arriba o abajo
+    if((rowCurrent-1 == rowDestination) || (rowCurrent+1 == rowDestination)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 void GameBoard::swapElement(int rowDestination, int colDestination, int rowCurrent, int colCurrent) {
   // Agarra el elemento actual a ser cambiado

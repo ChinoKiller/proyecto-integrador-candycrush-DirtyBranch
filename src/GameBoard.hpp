@@ -13,7 +13,7 @@ class GameBoard {
     // Inicializar sistema de puntuación
     int punctuation;
     // Movimientos restantes (DE PRUEBA!!!, hay que implementar que los movimientos se obtengan de nivel)
-    int moves = 1;
+    int moves = 5;
     // Matriz con las formas L y T, incluyendo todas sus rotaciones
     int LTshapes[8][5][2] = {
       // 1         2         3         4         5
@@ -55,6 +55,10 @@ class GameBoard {
     bool findPosibleCombinations();
     // Cambiar elementos
     void swapElement(int rowDestination, int colDestination, int rowCurrent, int colCurrent); 
+    // Hacer una jugada
+    void play();
+    // Revisar si 2 elementos son adyacentes
+    bool elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
 
     // Revisar que hayan combinaciones, revisar según prioridad
     // Buscar verticales de 5 o mas
