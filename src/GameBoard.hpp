@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <random>
+#include <SFML/Graphics.hpp>
+#include "./VentanaJuego/VentanaJuego.hpp"
 
 //declaracion funciones ensambla
 extern "C" {
@@ -42,9 +44,13 @@ class GameBoard {
       SEARCH = 0,
       DESTROY = 1
     };
+
+   
     
   // Funciones privadas
   private:
+    
+    void showWindow();
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
     // Crear matriz dinámica, retorna int que indica si lo inicializó correctamente
@@ -108,6 +114,20 @@ class GameBoard {
     static GameBoard& getInstance();
     // Función que maneja todas las funciones del GameBoard
     int runGameBoard();
+
+    int*& getMatriz(){
+      return this->gameMatrix;
+    };
+
+    int getColumnas(){
+      return this->colSize;
+    };
+
+    int getFilas(){
+      return this->rowSize;
+    };
+
+
 
   // Clase amiga
   friend class Level;

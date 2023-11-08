@@ -1,10 +1,10 @@
 all: compilador linker
 
 compilador:
-	g++ -c prueba.cpp
+	g++ -c Menus.cpp
 
 linker:
-	g++ prueba.o -o a -lsfml-graphics -lsfml-window -lsfml-system
+	g++ Menus.o -o a -lsfml-graphics -lsfml-window -lsfml-system
 
 clean:
-	rm -f prueba prueba.o a
+	rm -f Menus Menus.o a

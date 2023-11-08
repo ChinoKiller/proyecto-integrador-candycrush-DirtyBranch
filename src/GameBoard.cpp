@@ -10,6 +10,11 @@ GameBoard& GameBoard::getInstance() {
 int GameBoard::runGameBoard() {
   // Generar una matriz de juego random
   generateRandomBoard();
+  
+  // Muestra la ventana de juego
+  //showWindow();
+
+
   // Imprimir la matriz inicial
   printMatrix();
   // Mientras hayan movimientos, move >= 0 porque hay que eliminar la ultima jugada
@@ -38,6 +43,18 @@ int GameBoard::runGameBoard() {
   std::cout << "Puntos totales: " << punctuation << std::endl;
   return EXIT_SUCCESS;
 }
+
+/**/
+  void GameBoard::showWindow(){
+     
+     //sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
+     //VentanaJuego graficos(window, this->rowSize, this->colSize, this->gameMatrix);
+  }
+
+
+
+
+
 
 // Busca combinaciones posibles, las destruye si la configuración indica DESTROY.
 bool GameBoard::searchOrDestroy(enum combinationSetting setSearchOrDestroy) {

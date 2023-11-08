@@ -6,7 +6,7 @@
 
 int main() {
   // Nivel que quiero iniciar
-  int currentLevelNumber = 9;
+  int currentLevelNumber = 1;
   // Si quiero inicializar el nivel de los planetas
   if (currentLevelNumber >= 1 && currentLevelNumber <= 8) {
     // Obtener una instancia de Level, que represente al nivel de juego actual

@@ -8,6 +8,10 @@
 class Level {
   protected:
     // Instancia del GameBoard
+    GameBoard& getGameBoard(){
+      return this->currentGameBoard;
+    };
+  //GameBoard currentGameBoard;
     GameBoard currentGameBoard;
     // Numero del nivel en el que estamos, (son 10 niveles) 
     int levelNumber;
@@ -35,6 +39,10 @@ class Level {
     ~Level(){}
     // Get instance de Level
     static Level& getInstance();
+
+
+
+
     // Correr nivel
     virtual int runLevel() = 0;
 };
