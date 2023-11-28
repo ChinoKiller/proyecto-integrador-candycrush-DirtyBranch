@@ -16,7 +16,7 @@ int SunLevel::runLevel(){
     << "★ Movimientos restantes: " << this->moves << std::endl
     << "₊ °✦ ‧  ‧ ₊ ˚✧" << std::endl;
   // Correr el tablero de juego
-  currentGameBoard.runGameBoard(levelNumber);
+  currentGameBoard.runGameBoard();
   this->score = currentGameBoard.punctuation;
   return EXIT_SUCCESS;
 }

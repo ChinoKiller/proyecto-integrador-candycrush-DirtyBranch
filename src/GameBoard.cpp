@@ -8,22 +8,118 @@ GameBoard& GameBoard::getInstance() {
 }
 
 // Llama las funciones del GameBoard en el orden necesario
-int GameBoard::runGameBoard(int levelNumber) {
+int GameBoard::runGameBoard() {
   // Generar una matriz de juego random
   generateRandomBoard();
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
-    VentanaJuego pantalla(window,  rowSize,  colSize, gameMatrix,  levelNumber);
-  // Muestra la ventana de juego
-  showWindow(pantalla);
-
   
+  // Muestra la ventana de juego
+  //showWindow();
 
+  sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
+    sf::RectangleShape board;
+    sf::Sprite planet;
+    sf::Texture texturePlanet;
+    sf::Font font;
+    
+    sf::Text textPlanets;
+    sf::Text textMovimientos;
+    sf::Text textScore;
+    sf::Text textNext;
+
+    //hacerlo dinamico para el planeta actual
+    texturePlanet.loadFromFile("./MenusSfml/niveles/Planetas/VenusActivo.png");
+    font.loadFromFile("./MenusSfml/Fuentes/prstart.ttf");
+
+    textPlanets.setFont(font);
+    textPlanets.setString("Venus");
+    textPlanets.setCharacterSize(36);
+    textPlanets.setFillColor(sf::Color::White);
+    textPlanets.setPosition(50, 50);  // Coordenas X e Y
+
+    planet.setTexture(texturePlanet);
+    planet.setScale(0.35, 0.35);
+    planet.setPosition(70, 105);
+
+    textMovimientos.setFont(font);
+    textMovimientos.setString("Movimientos Restantes =");
+    textMovimientos.setCharacterSize(20);
+    textMovimientos.setFillColor(sf::Color::White);
+    textMovimientos.setPosition(50, 250);  // Coordenas X e Y
+
+    textScore.setFont(font);
+    textScore.setString("Puntaje =");
+    textScore.setCharacterSize(20);
+    textScore.setFillColor(sf::Color::White);
+    textScore.setPosition(50, 450-50);  // Coordenas X e Y
+
+    textNext.setFont(font);
+    textNext.setString("Siguiente Nivel =");
+    textNext.setCharacterSize(20);
+    textNext.setFillColor(sf::Color::White);
+    textNext.setPosition(50, 650-100);  // Coordenas X e Y
+
+
+    board.setSize(sf::Vector2f(540, 540));
+    board.setFillColor(sf::Color(128, 128, 128));
+    board.setPosition(390-25+300, 110-25);
+
+    sf::Texture textureFondo;
+    textureFondo.loadFromFile("./MenusSfml/menuPrincipal/menuFondo1.png");
+    sf::Sprite fondo(textureFondo);
+    cargarTexturas();
   // Imprimir la matriz inicial
   printMatrix();
   // Mientras hayan movimientos, move >= 0 porque hay que eliminar la ultima jugada
   while(this->moves >= 0) {
 
-    showWindow(pantalla);
+        window.clear();
+        window.draw(fondo);
+        window.draw(board);
+        window.draw(textPlanets);
+        window.draw(textMovimientos);
+        window.draw(textScore);
+        window.draw(textNext);
+        window.draw(planet);
+ 
+
+        for (int i = 0; i < rowSize; i++) {
+        for (int j = 0; j < colSize; j++) {
+            int alien = gameMatrix[i * rowSize + j];
+
+            std::string clave;
+
+            switch (alien) {
+                case 1:
+                    clave = "amarillo";
+                    break;
+                case 2:
+                    clave = "azul";
+                    break;
+                case 3:
+                    clave = "morado";
+                    break;
+                case 4:
+                    clave = "naranja";
+                    break;
+                case 5:
+                    clave = "rojo";
+                    break;
+                case 6:
+                    clave = "verde";
+                    break;
+                default:
+                    break;
+            
+            }
+
+            sf::Sprite alienSprite(texturasAliens[clave]);
+            alienSprite.setScale(0.5, 0.5);
+            alienSprite.setPosition(j * (500 / colSize) +690, i * (500 / rowSize) +110);
+
+            window.draw(alienSprite);
+        }
+    }
+           window.display();
     // Eliminar todas las combinaciones hechas
     searchOrDestroy(DESTROY);
     // Si no estamos en la ultima ronda
@@ -32,9 +128,9 @@ int GameBoard::runGameBoard(int levelNumber) {
       if (findPosibleCombinations()) {
         // Si hay combinaciones posibles y movimientos restantes
         // Pedirle al usuario que haga una jugada (restar movimientos)
-                   
+                   window.display();
         play();
-                   
+                   window.display();
         this->moves = this->moves - 1;
       } else {
         // Si no hay combinaciones posibles y hay movimientos restantes
@@ -392,11 +488,89 @@ int GameBoard::printMatrix() {
 }
 
 // imprimir matriz de juego
-void GameBoard::showWindow(VentanaJuego &pantalla) {
-  pantalla.dibujarPantalla();
+void GameBoard::showWindow() {
+  sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
+    sf::RectangleShape board;
+    sf::Sprite planet;
+    sf::Texture texturePlanet;
+    sf::Font font;
+    
+    sf::Text textPlanets;
+    sf::Text textMovimientos;
+    sf::Text textScore;
+    sf::Text textNext;
+
+    //hacerlo dinamico para el planeta actual
+    texturePlanet.loadFromFile("./MenusSfml/niveles/Planetas/VenusActivo.png");
+    font.loadFromFile("./MenusSfml/Fuentes/prstart.ttf");
+
+    textPlanets.setFont(font);
+    textPlanets.setString("Venus");
+    textPlanets.setCharacterSize(36);
+    textPlanets.setFillColor(sf::Color::White);
+    textPlanets.setPosition(50, 50);  // Coordenas X e Y
+
+    planet.setTexture(texturePlanet);
+    planet.setScale(0.35, 0.35);
+    planet.setPosition(70, 105);
+
+    textMovimientos.setFont(font);
+    textMovimientos.setString("Movimientos Restantes =");
+    textMovimientos.setCharacterSize(20);
+    textMovimientos.setFillColor(sf::Color::White);
+    textMovimientos.setPosition(50, 250);  // Coordenas X e Y
+
+    textScore.setFont(font);
+    textScore.setString("Puntaje =");
+    textScore.setCharacterSize(20);
+    textScore.setFillColor(sf::Color::White);
+    textScore.setPosition(50, 450-50);  // Coordenas X e Y
+
+    textNext.setFont(font);
+    textNext.setString("Siguiente Nivel =");
+    textNext.setCharacterSize(20);
+    textNext.setFillColor(sf::Color::White);
+    textNext.setPosition(50, 650-100);  // Coordenas X e Y
+
+
+    board.setSize(sf::Vector2f(540, 540));
+    board.setFillColor(sf::Color(128, 128, 128));
+    board.setPosition(390-25+300, 110-25);
+
+    sf::Texture textureFondo;
+    textureFondo.loadFromFile("./MenusSfml/menuPrincipal/menuFondo1.png");
+    sf::Sprite fondo(textureFondo);
+    cargarTexturas();
+
+        window.clear();
+        window.draw(fondo);
+        window.draw(board);
+        window.draw(textPlanets);
+        window.draw(textMovimientos);
+        window.draw(textScore);
+        window.draw(textNext);
+        window.draw(planet);
+    
 
 }
 
+void GameBoard::cargarTexturas(){
+    // Carga las texturas de los planetas en texturasAliens
+    texturasAliens["amarillo"] = sf::Texture();
+    texturasAliens["azul"] = sf::Texture();
+    texturasAliens["morado"] = sf::Texture();
+    texturasAliens["naranja"] = sf::Texture();
+    texturasAliens["rojo"] = sf::Texture();
+    texturasAliens["verde"] = sf::Texture();
+
+    texturasAliens["amarillo"].loadFromFile("./src/VentanaJuego/aliens/amarillo.png");
+    texturasAliens["azul"].loadFromFile("./src/VentanaJuego/aliens/azul.png");
+    texturasAliens["morado"].loadFromFile("./src/VentanaJuego/aliens/morado.png");
+    texturasAliens["naranja"].loadFromFile("./src/VentanaJuego/aliens/naranja.png");
+    texturasAliens["rojo"].loadFromFile("./src/VentanaJuego/aliens/rojo.png");
+    texturasAliens["verde"].loadFromFile("./src/VentanaJuego/aliens/verde.png");
+
+}
 
 // destructor
 GameBoard::~GameBoard() {

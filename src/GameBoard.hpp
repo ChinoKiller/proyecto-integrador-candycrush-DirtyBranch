@@ -16,7 +16,7 @@ extern "C" {
 // clase GameBoard
 class GameBoard {
   private:
-    int  levelNumber;
+    std::map<std::string, sf::Texture> texturasAliens;
     // Tamaño de las filas de la matriz
     int rowSize;
     // Tamaño de las columnas de la matriz
@@ -46,12 +46,12 @@ class GameBoard {
       DESTROY = 1
     };
 
-    std::map<std::string, sf::Texture> texturasAliens;
+   
     
   // Funciones privadas
   private:
-
-    void showWindow(VentanaJuego &pantalla);
+    void cargarTexturas();
+    void showWindow();
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
     // Crear matriz dinámica, retorna int que indica si lo inicializó correctamente
@@ -105,8 +105,6 @@ class GameBoard {
     // Aplicar gravedad
     int applyGravity();
     // Revisar que hayan jugadas posibles
-
-  
     
   public:
     // Constructor
@@ -116,7 +114,7 @@ class GameBoard {
     // Para obtener una instancia de GameBoard
     static GameBoard& getInstance();
     // Función que maneja todas las funciones del GameBoard
-    int runGameBoard(int levelNumber);
+    int runGameBoard();
 
     int*& getMatriz(){
       return this->gameMatrix;
