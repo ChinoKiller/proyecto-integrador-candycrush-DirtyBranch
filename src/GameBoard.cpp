@@ -128,8 +128,99 @@ int GameBoard::runGameBoard() {
       if (findPosibleCombinations()) {
         // Si hay combinaciones posibles y movimientos restantes
         // Pedirle al usuario que haga una jugada (restar movimientos)
+         window.clear();
+        window.draw(fondo);
+        window.draw(board);
+        window.draw(textPlanets);
+        window.draw(textMovimientos);
+        window.draw(textScore);
+        window.draw(textNext);
+        window.draw(planet);
+        for (int i = 0; i < rowSize; i++) {
+        for (int j = 0; j < colSize; j++) {
+            int alien = gameMatrix[i * rowSize + j];
+
+            std::string clave;
+
+            switch (alien) {
+                case 1:
+                    clave = "amarillo";
+                    break;
+                case 2:
+                    clave = "azul";
+                    break;
+                case 3:
+                    clave = "morado";
+                    break;
+                case 4:
+                    clave = "naranja";
+                    break;
+                case 5:
+                    clave = "rojo";
+                    break;
+                case 6:
+                    clave = "verde";
+                    break;
+                default:
+                    break;
+            
+            }
+
+            sf::Sprite alienSprite(texturasAliens[clave]);
+            alienSprite.setScale(0.5, 0.5);
+            alienSprite.setPosition(j * (500 / colSize) +690, i * (500 / rowSize) +110);
+
+            window.draw(alienSprite);
+        }
+    }
                    window.display();
+                   
         play();
+           window.clear();
+        window.draw(fondo);
+        window.draw(board);
+        window.draw(textPlanets);
+        window.draw(textMovimientos);
+        window.draw(textScore);
+        window.draw(textNext);
+        window.draw(planet);
+          for (int i = 0; i < rowSize; i++) {
+        for (int j = 0; j < colSize; j++) {
+            int alien = gameMatrix[i * rowSize + j];
+
+            std::string clave;
+
+            switch (alien) {
+                case 1:
+                    clave = "amarillo";
+                    break;
+                case 2:
+                    clave = "azul";
+                    break;
+                case 3:
+                    clave = "morado";
+                    break;
+                case 4:
+                    clave = "naranja";
+                    break;
+                case 5:
+                    clave = "rojo";
+                    break;
+                case 6:
+                    clave = "verde";
+                    break;
+                default:
+                    break;
+            
+            }
+
+            sf::Sprite alienSprite(texturasAliens[clave]);
+            alienSprite.setScale(0.5, 0.5);
+            alienSprite.setPosition(j * (500 / colSize) +690, i * (500 / rowSize) +110);
+
+            window.draw(alienSprite);
+        }
+    }
                    window.display();
         this->moves = this->moves - 1;
       } else {
@@ -357,6 +448,7 @@ void GameBoard::play() {
       switch (withinMatrix(rowCurrent, colCurrent)) {
         case true:
           // Si input es correcto, no seguir preguntando
+          
           keepReading = false;
           break;
         case false:
