@@ -1,4 +1,5 @@
 #include "GameBoard.hpp"
+#include <SFML/Graphics.hpp>
 
 // Para obtener solo una instancia del ChessBoard.
 GameBoard& GameBoard::getInstance() {
@@ -7,18 +8,22 @@ GameBoard& GameBoard::getInstance() {
 }
 
 // Llama las funciones del GameBoard en el orden necesario
-int GameBoard::runGameBoard() {
+int GameBoard::runGameBoard(int levelNumber) {
   // Generar una matriz de juego random
   generateRandomBoard();
-  
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
+    VentanaJuego pantalla(window,  rowSize,  colSize, gameMatrix,  levelNumber);
   // Muestra la ventana de juego
-  //showWindow();
+  showWindow(pantalla);
 
+  
 
   // Imprimir la matriz inicial
   printMatrix();
   // Mientras hayan movimientos, move >= 0 porque hay que eliminar la ultima jugada
   while(this->moves >= 0) {
+
+    showWindow(pantalla);
     // Eliminar todas las combinaciones hechas
     searchOrDestroy(DESTROY);
     // Si no estamos en la ultima ronda
@@ -27,7 +32,9 @@ int GameBoard::runGameBoard() {
       if (findPosibleCombinations()) {
         // Si hay combinaciones posibles y movimientos restantes
         // Pedirle al usuario que haga una jugada (restar movimientos)
+                   
         play();
+                   
         this->moves = this->moves - 1;
       } else {
         // Si no hay combinaciones posibles y hay movimientos restantes
@@ -44,12 +51,6 @@ int GameBoard::runGameBoard() {
   return EXIT_SUCCESS;
 }
 
-/**/
-void GameBoard::showWindow(){
-    
-    //sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
-    //VentanaJuego graficos(window, this->rowSize, this->colSize, this->gameMatrix);
-}
 
 
 // Busca combinaciones posibles, las destruye si la configuración indica DESTROY.
@@ -389,6 +390,13 @@ int GameBoard::printMatrix() {
   } 
   return EXIT_SUCCESS;
 }
+
+// imprimir matriz de juego
+void GameBoard::showWindow(VentanaJuego &pantalla) {
+  pantalla.dibujarPantalla();
+
+}
+
 
 // destructor
 GameBoard::~GameBoard() {

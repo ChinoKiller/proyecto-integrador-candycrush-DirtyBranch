@@ -16,7 +16,7 @@ int PlanetLevel::runLevel(){
     << "★ Movimientos restantes: " << this->moves << std::endl
     << "₊ °✦ ‧  ‧ ₊ ˚✧" << std::endl;
   // Correr el tablero de juego
-  currentGameBoard.runGameBoard();
+  currentGameBoard.runGameBoard(this->levelNumber);
   this->score = currentGameBoard.punctuation;
   return EXIT_SUCCESS;
 }
