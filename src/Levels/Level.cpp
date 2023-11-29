@@ -3,6 +3,7 @@
 // Constructor por parámetro de niveles de planetas y sol
 Level::Level(int levelNumber): levelNumber(levelNumber)
 { 
+    
     switch (this->levelNumber)
     {
     case 1:

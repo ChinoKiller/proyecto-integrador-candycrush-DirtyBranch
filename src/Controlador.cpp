@@ -1,14 +1,18 @@
 #include "Controlador.hpp"
 
-int Controlador::runGame() {
-    // Si se gana el nivel seguir al otro
-    //while (this->currentLevelNumber < 10 /*&& (sigue en ventana de juego)*/) {
-        this->currentLevel = Level(currentLevelNumber);
-        currentLevel.runLevel(this->window);
-        std::cout<< "Gano el nivel" <<std::endl;
-        // Dibujar pantalla de niveles animándose
-        this->currentLevelNumber++;
-        std::cout<< this->currentLevelNumber <<std::endl;
-    //}
-    return EXIT_SUCCESS;
+
+void Controlador::setCurrentLevel(int newLevel) { 
+    this->currentLevelNumber = newLevel;
+}
+
+
+
+bool Controlador::runGame() {
+    // Crear level
+    this->currentLevel = Level(currentLevelNumber);
+    // Verificar si gano el juego
+    if (currentLevel.runLevel(this->window)) {
+        return true;
+    }
+    return false;
 }

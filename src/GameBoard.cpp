@@ -11,9 +11,11 @@ GameBoard& GameBoard::getInstance() {
 bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore) {
 	// Generar una matriz de juego random
 	generateRandomBoard();
-	
+	this->localMoves = moves;
+	this->localGoalScore = goalScore; 
   // Muestra la ventana de juego
   cargarTexturas();
+    cuadro.setOutlineColor(sf::Color::Black);
 	showWindow(currentLevelNumber, window);
   while (window.isOpen()) {
     sf::Event event;
@@ -22,12 +24,13 @@ bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, i
         window.close();
       }
 
-      cargarTexturas();
+      //cargarTexturas();
 
       // Mientras hayan movimientos, move >= 0 porque hay que eliminar la ultima jugada
     
       while((moves >= 0) && (this->currentScore < goalScore)) {
-        //showWindow(window);
+        cuadro.setOutlineColor(sf::Color::Black);
+				//showWindow(window);
         // Eliminar todas las combinaciones hechas
         searchOrDestroy(DESTROY);
 				printMatrix();
@@ -38,8 +41,12 @@ bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, i
           if (findPosibleCombinations()) {
             // Si hay combinaciones posibles y movimientos restantes
             // Pedirle al usuario que haga una jugada (restar movimientos)
+			this->localMoves = moves;
+			this->localGoalScore = goalScore; 
             showWindow(currentLevelNumber, window);
-            play();
+            play(currentLevelNumber, window);
+			this->localMoves = moves;
+			this->localGoalScore = goalScore; 
             showWindow(currentLevelNumber, window);
             moves = moves - 1;
           } else {
@@ -159,7 +166,7 @@ bool GameBoard::findPosibleCombinations(){
 	for(int rowIndex = 0; rowIndex < rowSize; rowIndex++) {
 	for(int colIndex = 0; colIndex < colSize; colIndex++) {
 		// Revisar si elemento se puede mover arriba
-		if(withinMatrix(rowIndex-1, colIndex)) {
+		if(_withinMatrix(rowIndex-1, colIndex, this->rowSize, this->colSize)) {
 		// Mover elemento para arriba
 		swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
 		// Revisar si hay combinaciones 
@@ -172,7 +179,7 @@ bool GameBoard::findPosibleCombinations(){
 		swapElement(rowIndex-1, colIndex, rowIndex, colIndex);
 		}
 		// Revisar si elemento se puede mover izquierda
-		if(withinMatrix(rowIndex, colIndex-1)) {
+		if(_withinMatrix(rowIndex, colIndex-1, this->rowSize, this->colSize)) {
       // Mover elemento para izquierda
       swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
       // Revisar si hay combinaciones 
@@ -185,7 +192,7 @@ bool GameBoard::findPosibleCombinations(){
       swapElement(rowIndex, colIndex-1, rowIndex, colIndex);
 		}
 		// Revisar si elemento se puede mover derecha
-		if(withinMatrix(rowIndex, colIndex+1)) {
+		if(_withinMatrix(rowIndex, colIndex+1, this->rowSize, this->colSize)) {
 		// Mover elemento para derecha
 		swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
 		// Revisar si hay combinaciones 
@@ -198,7 +205,7 @@ bool GameBoard::findPosibleCombinations(){
 		swapElement(rowIndex, colIndex+1, rowIndex, colIndex);
 		}
 		// Revisar si elemento se puede mover abajo
-		if(withinMatrix(rowIndex+1, colIndex)) {
+		if(_withinMatrix(rowIndex+1, colIndex, this->rowSize, this->colSize)) {
 		// Mover elemento para abajo
 		swapElement(rowIndex+1, colIndex, rowIndex, colIndex);
 		// Revisar si hay combinaciones 
@@ -216,72 +223,111 @@ bool GameBoard::findPosibleCombinations(){
 }
 
 
-void GameBoard::play() {
-  int rowCurrent, colCurrent;
+void GameBoard::play(int currentLevelNumber, sf::RenderWindow& window) {
+  sf::Event event;
   bool keepReading = true;
-  // Mientras el input sea incorrecto, seguir preguntando
-  std::cout << "₊˚⊹ ⋆ Ingrese fila y columnas separados de espacios ₊˚⊹ ⋆" << std::endl;
   while(keepReading) {
-    std::cout << "★ Posición del elemento que quiere cambiar: " << std::endl;
-    // Si logra leer bien dos valores enteros
-    if(std::cin >> rowCurrent >> colCurrent) {
-      // Verificar que input este correcto
-      switch (withinMatrix(rowCurrent, colCurrent)) {
-        case true:
-          // Si input es correcto, no seguir preguntando
-          keepReading = false;
-          break;
-        case false:
-          // Si el input es incorrecto, imprimir mensaje y seguir preguntando
-          std::cout << "Ingrese filas y columnas válidas (╥﹏╥)" << std::endl;
-          break;
+    while (window.pollEvent(event) && keepReading) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
       }
-    } else {
-      std::cin.clear();    // Limpiar el estado de error
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descartar entrada inválida
-      std::cout << "Ingrese números válidos pls (╥﹏╥)" << std::endl;
+      if (event.type == sf::Event::KeyPressed) {       
+        if (event.key.code == sf::Keyboard::Right) {
+          if(currentCol < colSize-1){
+            currentCol++;
+            showWindow(currentLevelNumber, window);
+          }
+
+        } else if (event.key.code == sf::Keyboard::Left) {
+          if(currentCol > 0){
+            currentCol--;
+            showWindow(currentLevelNumber, window);
+          }
+
+        } else if (event.key.code == sf::Keyboard::Up) { 
+          if(currentRow > 0){
+            currentRow--;
+            showWindow(currentLevelNumber, window);
+          }
+
+        } else if (event.key.code == sf::Keyboard::Down) { 
+          if(currentRow < rowSize-1){
+            currentRow++;
+            showWindow(currentLevelNumber, window);
+          }
+
+        } else if (event.key.code == sf::Keyboard::X) {      
+          switch (_withinMatrix(currentRow, currentCol, this->rowSize, this->colSize)) {
+            case true:
+                      // Si input es correcto, no seguir preguntando
+                        // Configurar el color del borde (en este caso, negro)
+              cuadro.setOutlineColor(sf::Color::Yellow);
+              showWindow(currentLevelNumber, window);
+              keepReading = false;
+              break;
+            case false:
+                      // Si el input es incorrecto, imprimir mensaje y seguir preguntando
+              std::cout << "Ingrese filas y columnas válidas (╥﹏╥)" << std::endl;
+              break;
+          }
+        }
+      }
     }
   }
-  
+
+
+
   keepReading = true;
   int rowDestination, colDestination;
+
   while(keepReading) {
-    std::cout << "★ Posición destino: " << std::endl;
-    // Si logra leer bien dos valores enteros
-    if(std::cin >> rowDestination >> colDestination) {
-      // Verificar que input este dentro del rango de la matriz
-      switch (withinMatrix(rowDestination, rowDestination)) {
-        case true:
-          // Revisar si son adyacentes
-          if (elementsAreAdjacent(rowCurrent, colCurrent, rowDestination, colDestination)) {
-            // Si input es correcto, no seguir preguntando
-            keepReading = false;
-            break;
-          } else {
-            std::cout << "Elementos no son adyacentes! (╥﹏╥)" << std::endl;
-          }
-          break;
-        case false:
-          // Si el input es incorrecto, imprimir mensaje y seguir preguntando
-          std::cout << "Ingrese filas y columnas válidas (╥﹏╥)" << std::endl;
-          break;
+    while (window.pollEvent(event) && keepReading) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
       }
-    } else {
-      std::cin.clear();    // Limpiar el estado de error
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Descartar entrada inválida
-      std::cout << "Ingrese números válidos pls (╥﹏╥)" << std::endl;
-    }
+      if (event.type == sf::Event::KeyPressed) {   
+        if (event.key.code == sf::Keyboard::Right) {
+          if(currentCol < colSize-1){
+            colDestination = currentCol+1;
+            rowDestination = currentRow;
+            keepReading = false;
+          }
+        } else if (event.key.code == sf::Keyboard::Left) {
+          if(currentCol > 0){
+            colDestination = currentCol-1;
+            rowDestination = currentRow;
+            keepReading = false;
+          }
+        } else if (event.key.code == sf::Keyboard::Up) { 
+          if(currentRow > 0){
+            rowDestination = currentRow-1;
+            colDestination = currentCol;
+            keepReading = false;
+          }
+        } else if (event.key.code == sf::Keyboard::Down) { 
+          if(currentRow < rowSize-1){
+            rowDestination = currentRow+1;
+            colDestination = currentCol;
+            keepReading = false;
+          }
+        } 
+    
+      }
+    }         
   }
   // Intercambiar 
-  swapElement(rowCurrent, colCurrent, rowDestination, colDestination);
+  swapElement(currentRow, currentCol, rowDestination, colDestination);
+  std::cout << "After Swap" << std::endl;
+  //printMatrix();
   if (!searchOrDestroy(SEARCH)) {
-    std::cout << "No formó combinación ૮₍ > ⤙ < ₎ა sorry!" << std::endl;
-    swapElement(rowDestination, colDestination, rowCurrent, colCurrent);
+    std::cout << "No combinations, undo swap" << std::endl;
+    swapElement(rowDestination, colDestination, currentRow, currentCol);
+    //printMatrix();
   }
 }
 
 
-bool GameBoard::elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination) {
+/*bool GameBoard::elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination) {
 	if(rowCurrent == rowDestination) {
 	// Izquierda o derecha
 	if((colCurrent-1 == colDestination) || (colCurrent+1 == colDestination)){
@@ -294,12 +340,12 @@ bool GameBoard::elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDesti
 	}
 	}
 	return false;
-}
+}*/
 /*
 include en c++ de la funcion:
 bool _elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
 
-Creo que esta funcion se puede migrar totalmente a ensamblador
+Creo que esta funcion se puede poner totalmente a ensamblador
 global _elementsAreAdjacent
 ; Funcion que revisa si los elementos son adyancentes
 ; Parametros
@@ -408,7 +454,7 @@ _swapElement:
 	mov r8, r15
 	call _getCellValue
 
-	
+
 	
     
     ;cambiar parametros orden
@@ -451,7 +497,7 @@ void GameBoard::pointsSystem(int combinationPoints) {
 void GameBoard::pointsSystem(int combinationPoints) {
 	// Se suma los puntos de la combinación a los puntos que ya se tienen
 	this->currentScore = _pointsSystem(combinationPoints, this->currentScore);
-}	
+}
 
 /*
 void GameBoard::pointsSystem(int combinationPoints) {
@@ -543,55 +589,59 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
     sf::Text textScore;
     sf::Text textNext;
 
+	sf::Text textMovimientosNumber;
+    sf::Text textScoreNumber;
+    sf::Text textNextNumber;
+
     //hacerlo dinamico para el planeta actual
  
     font.loadFromFile("./assets/Fuentes/prstart.ttf");
 
 	    switch (currentLevelNumber) {
         case 1:
-						planet.setScale(0.28, 0.28);
             this->levelName = "Neptuno";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/NeptunoActivo.png");
+						planet.setScale(0.28, 0.28);
             break;
         case 2:
-						planet.setScale(0.28, 0.28);
             this->levelName = "Urano";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/UranoActivo.png");
+						planet.setScale(0.28, 0.28);
             break;
         case 3:
-						planet.setScale(0.30, 0.30);
             this->levelName = "Saturno";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/SaturnoActivo.png");
+						planet.setScale(0.30, 0.30);
             break;
         case 4:
-						planet.setScale(0.25, 0.25);
             this->levelName = "Jupiter";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/JupiterActivo.png");
+						planet.setScale(0.25, 0.25);
             break;
         case 5:
-						planet.setScale(0.30, 0.30);
             this->levelName = "Marte";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/MarteActivo.png");
+						planet.setScale(0.30, 0.30);
             break;
         case 6:
-						planet.setScale(0.30, 0.30);
             this->levelName = "Tierra";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/TierraActivo.png");
+						planet.setScale(0.30, 0.30);
             break;
         case 7:
-						planet.setScale(0.30, 0.30);
             this->levelName = "Venus";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/VenusActivo.png");
+						planet.setScale(0.30, 0.30);
             break;
         case 8:
-						planet.setScale(0.30, 0.30);
             this->levelName = "Mercurio";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/MercurioActivo.png");
+						planet.setScale(0.30, 0.30);
             break;
         case 9:
-						planet.setScale(0.20, 0.20);
             this->levelName = "Sol";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/SolActivo.png");
+						planet.setScale(0.20, 0.20);
             break;
         default:
             break;
@@ -623,11 +673,37 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
     textNext.setCharacterSize(20);
     textNext.setFillColor(sf::Color::White);
     textNext.setPosition(50, 650-100);  // Coordenas X e Y
+	/*
+	std::string cadena;
+	
+	*/
+	textMovimientosNumber.setFont(font);
+    //textMovimientosNumber.setString();
+    textMovimientosNumber.setCharacterSize(20);
+    textMovimientosNumber.setFillColor(sf::Color::White);
+    textMovimientosNumber.setPosition(50, 250);  // Coordenas X e Y
+
+    textScoreNumber.setFont(font);
+    textScoreNumber.setString("Puntaje =");
+    textScoreNumber.setCharacterSize(20);
+    textScoreNumber.setFillColor(sf::Color::White);
+    textScoreNumber.setPosition(50, 450-50);  // Coordenas X e Y
+
+    textNextNumber.setFont(font);
+    textNextNumber.setString("Siguiente Nivel =");
+    textNextNumber.setCharacterSize(20);
+    textNextNumber.setFillColor(sf::Color::White);
+    textNextNumber.setPosition(50, 650-100);  // Coordenas X e Y
 
 
     board.setSize(sf::Vector2f(540, 540));
     board.setFillColor(sf::Color(128, 128, 128));
     board.setPosition(390-25+300, 110-25);
+
+	cuadro.setSize(sf::Vector2f(45, 45));
+    cuadro.setOutlineThickness(2.f);
+    cuadro.setPosition(currentCol * (500 / colSize) +690, currentRow * (500 / rowSize) +110);
+
 
     sf::Texture textureFondo;
     textureFondo.loadFromFile("./assets/menuPrincipal/menuFondo1.png");
@@ -637,11 +713,12 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
         window.clear();
         window.draw(fondo);
         window.draw(board);
+		window.draw(cuadro);
         window.draw(textPlanets);
+        window.draw(planet);
         window.draw(textMovimientos);
         window.draw(textScore);
         window.draw(textNext);
-        window.draw(planet);
     dibujarMatriz(window);
     
 
@@ -907,6 +984,9 @@ void GameBoard::eliminateHorizontal(int row, int col, int horizontalLength) {
 	}
 	applyGravity();
 }
+/*
+
+*/
 
 // Buscar combinaciones de la forma L y T y todas sus rotaciones
 bool GameBoard::searchLT(enum combinationSetting setSearchOrDestroy) {
@@ -970,12 +1050,12 @@ void GameBoard::eliminateLT(int shapeNumber, int row, int col) {
 
 
 // revisar que no se sale de la matriz
-bool GameBoard::withinMatrix(int row, int col) {
+/*bool GameBoard::withinMatrix(int row, int col) {
 	return (row >= 0 
 	&& col >= 0
 	&& row < rowSize
 	&& col < colSize);
-}
+}*/
 
 
 /* Corregir esta funcion en c++.
@@ -992,7 +1072,7 @@ Copiar esta parte a ensamblador
 // revisar si son del mismo color
 bool GameBoard::isSameColor(int row, int col, int color) {
 	// si se sale de la matriz o el color es 0 retornar falso
-	if((withinMatrix(row, col) == false) || (color == 0)) {
+	if((_withinMatrix(row, col, this->rowSize, this->colSize) == false) || (color == 0)) {
 	return false;
 	} else {
 	return _isSameColor(this->gameMatrix,row,col,color,this->rowSize);
@@ -1010,13 +1090,23 @@ void GameBoard::eliminateVertical(int row, int col, int lengthToEliminate){
 // elimina un elemento, poniendo su valor en 0
 int GameBoard::eliminateElement(int row, int col) {
 	// asegurarse que el elemento a eliminar exista
-	if(withinMatrix(row,col)) {
+	if(!_eliminateElement(this->gameMatrix, this->rowSize, this->colSize, row,col)) {
+    std::cout << "Falló al eliminar elemento" << std::endl;
+	  return EXIT_FAILURE;
+	
+	}
+  return EXIT_SUCCESS;
+
+}
+/*int GameBoard::eliminateElement(int row, int col) {
+	// asegurarse que el elemento a eliminar exista
+	if(_withinMatrix(row,col, this->rowSize, this->colSize)) {
 	_setValue(this->gameMatrix,this->rowSize,this->colSize,row,col,0);
 	return EXIT_SUCCESS;
 	}
 	std::cout << "Falló al eliminar elemento" << std::endl;
 	return EXIT_FAILURE;
-}
+}*/
 /*
 funcion en c++
 
@@ -1112,76 +1202,76 @@ global _applyGravity
   ; rdi = dirección de memoria de la matriz
   ; rsi = tamaño filas (this-> rowSize)
   ; rdx = tamaño columnas (this-> colSize)
-_applyGravity:
+;_applyGravity:
 	;guardar parametros iniciales
-    mov r10, rdi ; rdi = dirección de memoria de la matriz
-    mov r11, rsi ; rsi = tamaño filas
-    mov r12, rdx ; rdx = tamaño columnas
+    ;mov r10, rdi ; rdi = dirección de memoria de la matriz
+    ;mov r11, rsi ; rsi = tamaño filas
+    ;mov r12, rdx ; rdx = tamaño columnas
 	
 	; primer for
 	;for (int colIndex = 0; colIndex < this->colSize; colIndex++)
-	mov r15, 0		;colIndex	
-for1:
-	;mov r15, 0		;colIndex
-	cmp r15, r12	;colIndex < this->colSize
-	jge salirFor1
+	;mov r15, 0		;colIndex	
+;for1:
+	;;mov r15, 0		;colIndex
+	;cmp r15, r12	;colIndex < this->colSize
+	;jge salirFor1
 	; si r15 es menor que this->colSize
-	mov r8, r11 
-	dec r8			;	int destinationRow = this->rowSize - 1
+	;mov r8, r11 
+	;dec r8			;	int destinationRow = this->rowSize - 1
 
 	;segundo for
 	;for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) 
-	mov rbx, r11 	
-	dec rbx			; int rowIndex = this->rowSize - 1
-for2:
 	;mov rbx, r11 	
 	;dec rbx			; int rowIndex = this->rowSize - 1
-	cmp rbx, 0
-	jl salirFor2
+;for2:
+	;;mov rbx, r11 	
+	;;dec rbx			; int rowIndex = this->rowSize - 1
+	;cmp rbx, 0
+	;jl salirFor2
 
-	;int cellValue = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
+	;;int cellValue = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
 
-	mov rdi, r10	;this->gameMatrix
-	mov rsi, r11	;this->rowSize
-	mov rdx, r12	;this->colSize
-	mov rcx, rbx	;rowIndex
-	mov r8, r15		;colIndex
-	call _getCellValue
+	;mov rdi, r10	;this->gameMatrix
+	;mov rsi, r11	;this->rowSize
+	;mov rdx, r12	;this->colSize
+	;mov rcx, rbx	;rowIndex
+	;mov r8, r15		;colIndex
+	;call _getCellValue
 
-	mov r14, rax	;int cellValue
-	cmp r14, 0		if (cellValue!= 0)
-	je aumentarFor2
+	;mov r14, rax	;int cellValue
+	;cmp r14, 0		if (cellValue!= 0)
+	;je aumentarFor2
 	;_setValue(this->gameMatrix,this->rowSize,this->colSize,destinationRow,colIndex,cellValue);
-	mov rdi, r10	;this->gameMatrix
-	mov rsi, r11	;this->rowSize
-	mov rdx, r12	;this->colSize
-	mov rcx, rbx	;rowIndex
-	mov r8, r15		;colIndex
-	mov r9, r14 	;cellValue
-	call setValue
+	;mov rdi, r10	;this->gameMatrix
+	;mov rsi, r11	;this->rowSize
+	;mov rdx, r12	;this->colSize
+	;mov rcx, rbx	;rowIndex
+	;mov r8, r15		;colIndex
+	;mov r9, r14 	;cellValue
+	;call setValue
 
-	cmp r8, rbx 	;if (destinationRow != rowIndex)
-	je seguir
+	;cmp r8, rbx 	;if (destinationRow != rowIndex)
+	;je seguir
 	;_setValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex,0);
-	mov rdi, r10	;this->gameMatrix
-	mov rsi, r11	;this->rowSize
-	mov rdx, r12	;this->colSize
-	mov rcx, rbx	;rowIndex
-	mov r8, r15		;colIndex
-	mov r9, 0 	;0
-	call setValue
+	;mov rdi, r10	;this->gameMatrix
+	;mov rsi, r11	;this->rowSize
+	;mov rdx, r12	;this->colSize
+	;mov rcx, rbx	;rowIndex
+	;mov r8, r15		;colIndex
+	;mov r9, 0 	;0
+	;call setValue
 
-seguir:
-	dec r8			;destinationRow--
+;seguir:
+	;dec r8			;destinationRow--
 
-aumentarFor2:
-	dec rbx 	; rowIndex--
-	jmp for2
+;aumentarFor2:
+	;dec rbx 	; rowIndex--
+	;jmp for2
 
-salirFor2:
-	inc r15		; colIndex++
-	jmp for1
+;salirFor2:
+	;inc r15		; colIndex++
+	;jmp for1
 	
-salirFor1
-	ret
+;salirFor1
+	;ret
 */

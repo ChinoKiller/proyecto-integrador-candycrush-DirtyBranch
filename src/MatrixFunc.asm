@@ -8,7 +8,8 @@ global _readColRowSize
 global _pointsSystem
 global _withinMatrix
 ;global _elementsAreAdjacent
-;global _eliminateElement
+global _eliminateElement
+;global _applyGravity
 
 ;funcion para inicializar la matriz
 ; Parámetros:
@@ -153,6 +154,7 @@ exitRead:
 ; rdx = this->rowSize
 ; rcx = this->colSize
 
+
 _withinMatrix:
 	; Revisar rows
 	cmp rdi, 0
@@ -185,35 +187,35 @@ exitWithin:
 ; rcx colDestination
 
 ;_elementsAreAdjacent:
-;	mov r8, rsi
-;	dec r8
-;	mov r9, rsi
-;	inc r9
-;	mov r10, rdi
-;	dec r10
-;	mov r11, rdi
-;	inc r11
-;; ya estan los valores correctos
-;	cmp rdi, rdx
-;	jne revisarColumnas
+	;mov r8, rsi
+	;dec r8
+	;mov r9, rsi
+	;inc r9
+	;mov r10, rdi
+	;dec r10
+	;mov r11, rdi
+	;inc r11
+; ya estan los valores correctos
+	;cmp rdi, rdx
+	;jne revisarColumnas
 
 	; si son iguales 
-	cmp r8, rcx
-;	je sonAdyacentes
-	cmp r9, rcx
-;	je sonAdyacentes
-;	jmp noAdyacentes
+	;cmp r8, rcx
+	;je sonAdyacentes
+	;cmp r9, rcx
+	;je sonAdyacentes
+	;jmp noAdyacentes
 
 ;revisarColumnas:
-;	cmp rsi, rcx
-;	jne noAdyacente
+	;cmp rsi, rcx
+	;jne noAdyacente
 
 	; si son iguales
-;	cmp r10, rdx
-;	je sonAdyacentes
-;	cmp r11, rdx
-;	je sonAdyacentes
-;	jmp noAdyacentes
+	;cmp r10, rdx
+	;je sonAdyacentes
+	;cmp r11, rdx
+	;je sonAdyacentes
+	;jmp noAdyacentes
 
 ;sonAdyacentes:
 ;	mov rax, 1
@@ -233,34 +235,113 @@ exitWithin:
   ; rdx = tamaño columnas (this-> colSize)
   ; rcx = row
   ; r8 = col
-  ;_eliminateElement:	
+  _eliminateElement:	
     ;guardar parametros iniciales
+    mov r10, rdi ; rdi = dirección de memoria de la matriz
+    mov r11, rsi ; rsi = tamaño filas
+    mov r12, rdx ; rdx = tamaño columnas
+    mov r13, rcx ; rcx = row
+    
+    ;cambiar parametros orden
+    mov rdi, r13 ; rdi = row
+    mov rsi, r8 ; rsi = col
+    mov rdx, r11 ; rdx = this->rowSize
+    mov rcx, r12 ; rcx = this->colSize
+
+    call _withinMatrix
+    cmp rax, 0
+    je error
+
+    ;cambiar parametros orden
+    mov rdi, r10 ; rdi = row
+    mov rsi, r11 ; rsi = col
+    mov rdx, r12 ; rdx = this->rowSize
+    mov rcx, r13 ; rcx = this->colSize
+    mov r9, 0 ; r9 = newValue (0 en este caso)
+
+    call _setValue
+    mov rax, 1
+    ret
+
+error:
+  xor rax, rax
+  ret
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;funcion de ensambla para hacer la gravedad
+  ;parametros eliminate
+  ; rdi = dirección de memoria de la matriz
+  ; rsi = tamaño filas (this-> rowSize)
+  ; rdx = tamaño columnas (this-> colSize)
+;_applyGravity:
+	;guardar parametros iniciales
     ;mov r10, rdi ; rdi = dirección de memoria de la matriz
     ;mov r11, rsi ; rsi = tamaño filas
     ;mov r12, rdx ; rdx = tamaño columnas
-    ;mov r13, rcx ; rcx = row
-    
-    ;cambiar parametros orden
-    ;mov rdi, r13 ; rdi = row
-    ;mov rsi, r8 ; rsi = col
-    ;mov rdx, r11 ; rdx = this->rowSize
-    ;mov rcx, r12 ; rcx = this->colSize
+	
+	; primer for
+	;for (int colIndex = 0; colIndex < this->colSize; colIndex++)
+	;mov r15, 0		;colIndex	
+;for1:
+	;;mov r15, 0		;colIndex
+	;cmp r15, r12	;colIndex < this->colSize
+	;jge salirFor1
+	; si r15 es menor que this->colSize
+	;mov r8, r11 
+	;dec r8			;	int destinationRow = this->rowSize - 1
 
-    ;call _withinMatrix
-    ;cmp rax, 0
-    ;je error
+	;segundo for
+	;for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) 
+	;mov rbx, r11 	
+	;dec rbx			; int rowIndex = this->rowSize - 1
+;for2:
+	;;mov rbx, r11 	
+	;;dec rbx			; int rowIndex = this->rowSize - 1
+	;cmp rbx, 0
+	;jl salirFor2
 
-    ;cambiar parametros orden
-    ;mov rdi, r10 ; rdi = row
-    ;mov rsi, r11 ; rsi = col
-    ;mov rdx, r12 ; rdx = this->rowSize
-    ;mov rcx, r13 ; rcx = this->colSize
-    ;mov r9, 0 ; r9 = newValue (0 en este caso)
+	;;int cellValue = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
 
-    ;call _setValue
-    ;mov rax, 1
-    ;ret
+	;mov rdi, r10	;this->gameMatrix
+	;mov rsi, r11	;this->rowSize
+	;mov rdx, r12	;this->colSize
+	;mov rcx, rbx	;rowIndex
+	;mov r8, r15		;colIndex
+	;call _getCellValue
 
-;error:
-  ;xor rax, rax
-  ;ret
+	;mov r14, rax	;int cellValue
+	;cmp r14, 0		if (cellValue!= 0)
+	;je aumentarFor2
+	;_setValue(this->gameMatrix,this->rowSize,this->colSize,destinationRow,colIndex,cellValue);
+	;mov rdi, r10	;this->gameMatrix
+	;mov rsi, r11	;this->rowSize
+	;mov rdx, r12	;this->colSize
+	;mov rcx, rbx	;rowIndex
+	;mov r8, r15		;colIndex
+	;mov r9, r14 	;cellValue
+	;call setValue
+
+	;cmp r8, rbx 	;if (destinationRow != rowIndex)
+	;je seguir
+	;_setValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex,0);
+	;mov rdi, r10	;this->gameMatrix
+	;mov rsi, r11	;this->rowSize
+	;mov rdx, r12	;this->colSize
+	;mov rcx, rbx	;rowIndex
+	;mov r8, r15		;colIndex
+	;mov r9, 0 	;0
+	;call setValue
+
+;seguir:
+	;dec r8			;destinationRow--
+
+;aumentarFor2:
+	;dec rbx 	; rowIndex--
+	;jmp for2
+
+;salirFor2:
+	;inc r15		; colIndex++
+	;jmp for1
+	
+;salirFor1
+	;ret

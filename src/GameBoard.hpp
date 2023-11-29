@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <sstream>
 #include <random>
 #include <SFML/Graphics.hpp>
 
@@ -12,16 +13,19 @@ extern "C" {
     int _getCellValue(int* matriz, int rows, int cols, int row, int col);
     int _pointsSystem(int combinationPoints, int currentScore); 
     bool _readColRowSize(int rowColSize); 
-    //bool _withinMatrix(int row, int col, int rowSize, int colSize);
-    //bool _elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
-    //bool _eliminateElement(int* matriz, int rowSize, int colSize, int row, int col);
-    
+    bool _withinMatrix(int row, int col, int rowSize, int colSize);
+    bool _elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
+    bool _eliminateElement(int* matriz, int rowSize, int colSize, int row, int col);
+    //int _applyGravity(int* matriz, int rowSize, int colSize);
 }
 
 
 // clase GameBoard
 class GameBoard {
   private:
+    int currentRow = 0;
+    int currentCol = 0;
+    sf::RectangleShape cuadro;
     std::map<std::string, sf::Texture> texturasAliens;
     std::string levelName;
     // Tamaño de las filas de la matriz
@@ -32,6 +36,9 @@ class GameBoard {
     int* gameMatrix;
     // Inicializar sistema de puntuación
     int currentScore = 0;
+    int localMoves;
+    int localGoalScore;
+
     // Nivel actual en numero
 
     // Matriz con las formas L y T, incluyendo todas sus rotaciones
@@ -79,7 +86,7 @@ class GameBoard {
     // Cambiar elementos
     void swapElement(int rowDestination, int colDestination, int rowCurrent, int colCurrent); 
     // Hacer una jugada
-    void play();
+    void play(int currentLevelNumber, sf::RenderWindow& ventana);
     // Revisar si 2 elementos son adyacentes
     bool elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
     //genera un numero aleatorio del 1 al 6
