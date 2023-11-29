@@ -23,6 +23,7 @@ extern "C" {
 class GameBoard {
   private:
     std::map<std::string, sf::Texture> texturasAliens;
+    std::string levelName;
     // Tamaño de las filas de la matriz
     int rowSize;
     // Tamaño de las columnas de la matriz
@@ -31,8 +32,8 @@ class GameBoard {
     int* gameMatrix;
     // Inicializar sistema de puntuación
     int currentScore = 0;
-    
-    
+    // Nivel actual en numero
+
     // Matriz con las formas L y T, incluyendo todas sus rotaciones
     int LTshapes[8][5][2] = {
       // 1         2         3         4         5
@@ -56,7 +57,7 @@ class GameBoard {
   private:
     void dibujarMatriz(sf::RenderWindow& ventana);
     void cargarTexturas();
-    void showWindow(sf::RenderWindow& window);
+    void showWindow(int currentLevelNumber, sf::RenderWindow& window);
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
     // Crear matriz dinámica, retorna int que indica si lo inicializó correctamente
@@ -119,7 +120,7 @@ class GameBoard {
     // Para obtener una instancia de GameBoard
     static GameBoard& getInstance();
     // Función que maneja todas las funciones del GameBoard
-    bool runGameBoard(sf::RenderWindow& window, int moves, int goalScore);
+    bool runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore);
 
     int*& getMatriz(){
       return this->gameMatrix;

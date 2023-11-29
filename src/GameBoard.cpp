@@ -8,14 +8,13 @@ GameBoard& GameBoard::getInstance() {
 }
 
 // Llama las funciones del GameBoard en el orden necesario
-bool GameBoard::runGameBoard(sf::RenderWindow& window, int moves, int goalScore) {
+bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore) {
 	// Generar una matriz de juego random
 	generateRandomBoard();
 	
   // Muestra la ventana de juego
   cargarTexturas();
-  
-	showWindow(window);
+	showWindow(currentLevelNumber, window);
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -39,9 +38,9 @@ bool GameBoard::runGameBoard(sf::RenderWindow& window, int moves, int goalScore)
           if (findPosibleCombinations()) {
             // Si hay combinaciones posibles y movimientos restantes
             // Pedirle al usuario que haga una jugada (restar movimientos)
-            showWindow(window);
+            showWindow(currentLevelNumber, window);
             play();
-            showWindow(window);
+            showWindow(currentLevelNumber, window);
             moves = moves - 1;
           } else {
             // Si no hay combinaciones posibles y hay movimientos restantes
@@ -365,6 +364,81 @@ void GameBoard::swapElement(int rowDestination, int colDestination, int rowCurre
 	// Listo, los elementos ya se intercambiaron de lugar 
 }
 
+/*void swapElement(this->gameMatrix,this->rowSize,this->colSize, int rowDestination, int colDestination, int rowCurrent, int colCurrent)
+
+;funcion de ensambla para hacer el sawp entre dos elementos adyacentes
+  ;	parametros
+  ; rdi = this->gameMatrix
+  ; rsi = this->rowSize
+  ; rdx = this->colSize
+  ; rcx = rowDestination
+  ; r8 = colDestination
+  ; r9 = rowCurrent
+  ; r10 = colCurrent
+_swapElement:
+	;push rbp
+	;mov rbp, rsp
+
+    mov     rdi, qword [rbp]    ; this->gameMatrix (primer argumento)
+    mov     rsi, qword [rbp + 8]   ; this->rowSize (segundo argumento)
+    mov     rdx, qword [rbp + 16]   ; this->colSize (tercer argumento)
+    mov     rcx, qword [rbp + 24]   ; rowDestination (cuarto argumento)
+    mov     r8, qword [rbp + 32]    ; colDestination (quinto argumento)
+    mov     r9, qword [rbp + 40]    ; rowCurrent (sexto argumento)
+    mov     r10, qword [rbp + 48]   ; Acceso a colCurrent desde la pila
+
+	;guardar parametros iniciales
+    mov rax, rdi ; rdi = dirección de memoria de la matriz
+    mov rbx, rsi ; rsi = tamaño filas
+    mov r11, rdx ; rdx = tamaño columnas
+    mov r12, rcx ; rcx = rowDestination
+	mov r13, r8  ; r8 = colDestination
+	mov r14, r9	 ; r9 = rowCurrent
+	mov r15, r10 ; r10 = colCurrent	
+
+	;push rbp
+	;mov rax,
+
+	;poner parametros para llamar funcion
+	;int currentElement = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowCurrent,colCurrent);
+	mov rdi, rax
+	mov rsi, rbx
+	mov rdx, r11
+	mov rcx, r14
+	mov r8, r15
+	call _getCellValue
+
+	
+	
+    
+    ;cambiar parametros orden
+    ;mov rdi, r14 ; rdi = this->gameMatrix
+    ;mov rsi, r8 ; rsi = col
+    ;mov rdx, r11 ; rdx = this->rowSize
+    ;mov rcx, r12 ; rcx = this->colSize
+
+	;int currentElement = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowCurrent,colCurrent);
+    ;call _getCellValue
+    ;cmp rax, 0
+    ;je error
+
+    ;cambiar parametros orden
+    ;mov rdi, r10 ; rdi = row
+    ;mov rsi, r11 ; rsi = col
+    ;mov rdx, r12 ; rdx = this->rowSize
+    ;mov rcx, r13 ; rcx = this->colSize
+    ;mov r9, 0 ; r9 = newValue (0 en este caso)
+
+    ;call _setValue
+    ;mov rax, 1
+    ;ret
+
+;error:
+  ;xor rax, rax
+  ;ret
+
+*/
+
 /*
 // Función para el sistema de puntos.
 
@@ -458,8 +532,7 @@ int GameBoard::printMatrix() {
 
 
 // imprimir matriz de juego
-// imprimir matriz de juego
-void GameBoard::showWindow(sf::RenderWindow& window) {
+void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
     sf::RectangleShape board;
     sf::Sprite planet;
     sf::Texture texturePlanet;
@@ -471,18 +544,67 @@ void GameBoard::showWindow(sf::RenderWindow& window) {
     sf::Text textNext;
 
     //hacerlo dinamico para el planeta actual
-    texturePlanet.loadFromFile("./assets/niveles/Planetas/VenusActivo.png");
+ 
     font.loadFromFile("./assets/Fuentes/prstart.ttf");
 
+	    switch (currentLevelNumber) {
+        case 1:
+						planet.setScale(0.28, 0.28);
+            this->levelName = "Neptuno";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/NeptunoActivo.png");
+            break;
+        case 2:
+						planet.setScale(0.28, 0.28);
+            this->levelName = "Urano";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/UranoActivo.png");
+            break;
+        case 3:
+						planet.setScale(0.30, 0.30);
+            this->levelName = "Saturno";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/SaturnoActivo.png");
+            break;
+        case 4:
+						planet.setScale(0.25, 0.25);
+            this->levelName = "Jupiter";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/JupiterActivo.png");
+            break;
+        case 5:
+						planet.setScale(0.30, 0.30);
+            this->levelName = "Marte";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/MarteActivo.png");
+            break;
+        case 6:
+						planet.setScale(0.30, 0.30);
+            this->levelName = "Tierra";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/TierraActivo.png");
+            break;
+        case 7:
+						planet.setScale(0.30, 0.30);
+            this->levelName = "Venus";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/VenusActivo.png");
+            break;
+        case 8:
+						planet.setScale(0.30, 0.30);
+            this->levelName = "Mercurio";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/MercurioActivo.png");
+            break;
+        case 9:
+						planet.setScale(0.20, 0.20);
+            this->levelName = "Sol";
+            texturePlanet.loadFromFile("./assets/niveles/Planetas/SolActivo.png");
+            break;
+        default:
+            break;
+    }
+
     textPlanets.setFont(font);
-    textPlanets.setString("Venus");
+    textPlanets.setString(levelName);
     textPlanets.setCharacterSize(36);
     textPlanets.setFillColor(sf::Color::White);
     textPlanets.setPosition(50, 50);  // Coordenas X e Y
 
     planet.setTexture(texturePlanet);
-    planet.setScale(0.35, 0.35);
-    planet.setPosition(70, 105);
+    planet.setPosition(70, 103);
 
     textMovimientos.setFont(font);
     textMovimientos.setString("Movimientos Restantes =");
@@ -998,9 +1120,7 @@ _applyGravity:
 	
 	; primer for
 	;for (int colIndex = 0; colIndex < this->colSize; colIndex++)
-	mov r15, 0		;colIndex
-	mov rbx, r11 	
-	dec rbx			; int rowIndex = this->rowSize - 1	
+	mov r15, 0		;colIndex	
 for1:
 	;mov r15, 0		;colIndex
 	cmp r15, r12	;colIndex < this->colSize
@@ -1010,7 +1130,9 @@ for1:
 	dec r8			;	int destinationRow = this->rowSize - 1
 
 	;segundo for
-	;for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) {
+	;for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) 
+	mov rbx, r11 	
+	dec rbx			; int rowIndex = this->rowSize - 1
 for2:
 	;mov rbx, r11 	
 	;dec rbx			; int rowIndex = this->rowSize - 1

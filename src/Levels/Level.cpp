@@ -74,7 +74,7 @@ bool Level::runLevel(sf::RenderWindow& window) {
         boardSize = BOARD_SIZE_SUN;
     }
     // Inicializar matriz, si el tamaño es válido
-    if(!(currentGameBoard.initMatrix(BOARD_SIZE_PLANETS))) {
+    if(!(currentGameBoard.initMatrix(boardSize))) {
         return EXIT_FAILURE;
     }
     // Imprimir header
@@ -86,6 +86,6 @@ bool Level::runLevel(sf::RenderWindow& window) {
     << "★ Movimientos restantes: " << this->moves << std::endl
     << "₊ °✦ ‧  ‧ ₊ ˚✧" << std::endl;
     // Correr el tablero de juego
-    return currentGameBoard.runGameBoard(window, this->moves, this->goalScore);
+    return currentGameBoard.runGameBoard(this->levelNumber, window, this->moves, this->goalScore);
 }
 

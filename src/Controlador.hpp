@@ -14,5 +14,5 @@ private:
   // Nivel actual
   Level currentLevel;
   // Numero de nivel actual
-  int currentLevelNumber = 1;
+  int currentLevelNumber = 9;
 };
