@@ -1,5 +1,6 @@
 #include "Controlador.hpp"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <vector>
 #include <map>
 
@@ -352,134 +353,134 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
     background.setSize(sf::Vector2f(1280, 720));
     background.setTexture(&texture);
 
-
+    bool blockedLevels = true;
+    if (currentLevelNumber == 10) {
+        blockedLevels = false;
+    }
     while (window.isOpen()&& currentMenu==LEVEL_MENU) {
-        bool blockedLevels = true;
-        if (currentLevelNumber == 10) {
-            blockedLevels = false;
-        }
-            switch (currentLevelNumber) {
-                case 1:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasInactivos["venus"]);
-                    tierra.setTexture(texturasPlanetasInactivos["tierra"]);
-                    marte.setTexture(texturasPlanetasInactivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasInactivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasInactivos["saturno"]);
-                    urano.setTexture(texturasPlanetasInactivos["urano"]);
-                    break;
-                case 2:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasInactivos["venus"]);
-                    tierra.setTexture(texturasPlanetasInactivos["tierra"]);
-                    marte.setTexture(texturasPlanetasInactivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasInactivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasInactivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 3:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasInactivos["venus"]);
-                    tierra.setTexture(texturasPlanetasInactivos["tierra"]);
-                    marte.setTexture(texturasPlanetasInactivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasInactivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 4:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasInactivos["venus"]);
-                    tierra.setTexture(texturasPlanetasInactivos["tierra"]);
-                    marte.setTexture(texturasPlanetasInactivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 5:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasInactivos["venus"]);
-                    tierra.setTexture(texturasPlanetasInactivos["tierra"]);
-                    marte.setTexture(texturasPlanetasActivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 6:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasInactivos["venus"]);
-                    tierra.setTexture(texturasPlanetasActivos["tierra"]);
-                    marte.setTexture(texturasPlanetasActivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 7:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasActivos["venus"]);
-                    tierra.setTexture(texturasPlanetasActivos["tierra"]);
-                    marte.setTexture(texturasPlanetasActivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 8:
-                    sol.setTexture(texturasPlanetasInactivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasActivos["venus"]);
-                    tierra.setTexture(texturasPlanetasActivos["tierra"]);
-                    marte.setTexture(texturasPlanetasActivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 9:
-                    sol.setTexture(texturasPlanetasActivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasActivos["venus"]);
-                    tierra.setTexture(texturasPlanetasActivos["tierra"]);
-                    marte.setTexture(texturasPlanetasActivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                case 10:
-                    sol.setTexture(texturasPlanetasActivos["sol"]);
-                    mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
-                    venus.setTexture(texturasPlanetasActivos["venus"]);
-                    tierra.setTexture(texturasPlanetasActivos["tierra"]);
-                    marte.setTexture(texturasPlanetasActivos["marte"]);
-                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
-                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
-                    urano.setTexture(texturasPlanetasActivos["urano"]);
-                    break;
-                default:
-                    break;
-            
-            }
-            
-            window.clear();
-            window.draw(background);
         
-            //dibujar elementos
-            window.draw(background);
-            window.draw(sol);
-            window.draw(mercurio);
-            window.draw(venus);
-            window.draw(tierra);
-            window.draw(marte);
-            window.draw(jupiter);
-            window.draw(saturno);
-            window.draw(urano);
-            window.draw(neptuno);
+        switch (currentLevelNumber) {
+            case 1:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasInactivos["venus"]);
+                tierra.setTexture(texturasPlanetasInactivos["tierra"]);
+                marte.setTexture(texturasPlanetasInactivos["marte"]);
+                jupiter.setTexture(texturasPlanetasInactivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasInactivos["saturno"]);
+                urano.setTexture(texturasPlanetasInactivos["urano"]);
+                break;
+            case 2:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasInactivos["venus"]);
+                tierra.setTexture(texturasPlanetasInactivos["tierra"]);
+                marte.setTexture(texturasPlanetasInactivos["marte"]);
+                jupiter.setTexture(texturasPlanetasInactivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasInactivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 3:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasInactivos["venus"]);
+                tierra.setTexture(texturasPlanetasInactivos["tierra"]);
+                marte.setTexture(texturasPlanetasInactivos["marte"]);
+                jupiter.setTexture(texturasPlanetasInactivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 4:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasInactivos["venus"]);
+                tierra.setTexture(texturasPlanetasInactivos["tierra"]);
+                marte.setTexture(texturasPlanetasInactivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 5:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasInactivos["venus"]);
+                tierra.setTexture(texturasPlanetasInactivos["tierra"]);
+                marte.setTexture(texturasPlanetasActivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 6:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasInactivos["venus"]);
+                tierra.setTexture(texturasPlanetasActivos["tierra"]);
+                marte.setTexture(texturasPlanetasActivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 7:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasInactivos["mercurio"]);
+                venus.setTexture(texturasPlanetasActivos["venus"]);
+                tierra.setTexture(texturasPlanetasActivos["tierra"]);
+                marte.setTexture(texturasPlanetasActivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 8:
+                sol.setTexture(texturasPlanetasInactivos["sol"]);
+                mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
+                venus.setTexture(texturasPlanetasActivos["venus"]);
+                tierra.setTexture(texturasPlanetasActivos["tierra"]);
+                marte.setTexture(texturasPlanetasActivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 9:
+                sol.setTexture(texturasPlanetasActivos["sol"]);
+                mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
+                venus.setTexture(texturasPlanetasActivos["venus"]);
+                tierra.setTexture(texturasPlanetasActivos["tierra"]);
+                marte.setTexture(texturasPlanetasActivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            case 10:
+                sol.setTexture(texturasPlanetasActivos["sol"]);
+                mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
+                venus.setTexture(texturasPlanetasActivos["venus"]);
+                tierra.setTexture(texturasPlanetasActivos["tierra"]);
+                marte.setTexture(texturasPlanetasActivos["marte"]);
+                jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                urano.setTexture(texturasPlanetasActivos["urano"]);
+                break;
+            default:
+                break;
+        
+        }
+        
+        window.clear();
+        window.draw(background);
     
-            window.display();
+        //dibujar elementos
+        window.draw(background);
+        window.draw(sol);
+        window.draw(mercurio);
+        window.draw(venus);
+        window.draw(tierra);
+        window.draw(marte);
+        window.draw(jupiter);
+        window.draw(saturno);
+        window.draw(urano);
+        window.draw(neptuno);
+
+        window.display();
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -491,15 +492,16 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
                         currentMenu = MAIN_MENU;
                     } else if (event.key.code == sf::Keyboard::X) { 
                         currentMenu = TABLERO;
-                    } else if (event.key.code == sf::Keyboard::Right) {
+                    } else if ((event.key.code == sf::Keyboard::Right) && (blockedLevels == false)){
                         if (currentLevelNumber>=2){
                             currentLevelNumber -= 1;
                         }
-                    } else if (event.key.code == sf::Keyboard::Left) {
+                    }else if ((event.key.code == sf::Keyboard::Left) && (blockedLevels == false)) {
                         if (currentLevelNumber<=8){
                             currentLevelNumber += 1;
                         }
                     }
+                    
                 }
             }
         }
@@ -531,7 +533,13 @@ Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
 }
 
 int main() {
-    
+    sf::Music music;
+    if(!music.openFromFile("assets/musica/Sailor_Girl.wav")) {
+        std::cout << "No se abrió la musica" << std::endl;
+        return EXIT_FAILURE;
+    }
+    music.play();
+    music.setLoop(true);
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
     Menu currentMenu = MAIN_MENU;
 
