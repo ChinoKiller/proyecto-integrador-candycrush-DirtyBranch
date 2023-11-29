@@ -12,10 +12,6 @@ int crrntTxreSfx = 0;   // este al booleando de los efectos de sonido
 int currentLevel = 1;
 
 
-
-
-
-
 struct VentanaJuegos {
     int filas = 9;
     int columnas = 9;
@@ -23,7 +19,7 @@ struct VentanaJuegos {
     const int celdaAncho = 500 / columnas;
     const int celdaAlto = 500 / filas;
 };
- 
+
 int matriz [81]; 
 std::map<std::string, sf::Texture> texturasAliens;
 
@@ -103,9 +99,6 @@ void dibujarMatriz(sf::RenderWindow &window, int filas, int columnas, int celdaA
 
     window.display();
 }
-
-
-
 
 
 Menu menuP(sf::RenderWindow &window, Menu &currentMenu){
@@ -596,11 +589,6 @@ Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
 
 
 
-
-
-
-
-
 int main() {
     
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
@@ -608,11 +596,6 @@ int main() {
     llenarMatriz();
 
     //VentanaJuego ventanaTablero(window, 9, 9, matriz);
-
-    
-
-
-
 
     //maquina de estados
     while (currentMenu != EXIT){

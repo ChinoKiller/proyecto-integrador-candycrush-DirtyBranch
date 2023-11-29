@@ -15,18 +15,17 @@
 #define MOVES_LEVEL_7   30  // Venus
 #define MOVES_LEVEL_8   30  // Mercurio
 #define MOVES_LEVEL_9   35  // Sol
-#define MOVES_LEVEL_10  25  // Plutón
 
 // Puntuación a alcanzar en cada nivel
-#define GOAL_SCORE_1    50
-#define GOAL_SCORE_2    70
-#define GOAL_SCORE_3    70
-#define GOAL_SCORE_4    70
-#define GOAL_SCORE_5    70
-#define GOAL_SCORE_6    70
-#define GOAL_SCORE_7    70
-#define GOAL_SCORE_8    70
-#define GOAL_SCORE_9    70
+#define GOAL_SCORE_1    30
+#define GOAL_SCORE_2    30
+#define GOAL_SCORE_3    30
+#define GOAL_SCORE_4    30
+#define GOAL_SCORE_5    30
+#define GOAL_SCORE_6    30
+#define GOAL_SCORE_7    30
+#define GOAL_SCORE_8    30
+#define GOAL_SCORE_9    30
 
 // Tiempo disponible en el nivel bonus (Plutón)
 #define SECONDS_BONUS_LEVEL   60

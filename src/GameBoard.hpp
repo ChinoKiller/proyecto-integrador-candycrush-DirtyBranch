@@ -4,12 +4,18 @@
 #include <SFML/Graphics.hpp>
 #include "./VentanaJuego/VentanaJuego.hpp"
 
-//declaracion funciones ensambla
+// Declaración funciones ensambla
 extern "C" {
     void _initMatrix(int* matriz, int size);
     void _setValue(int* matriz, int rows, int cols, int row, int col, int value);
     bool _isSameColor(int* matriz, int row, int col, int color, int tam);
     int _getCellValue(int* matriz, int rows, int cols, int row, int col);
+    int _pointsSystem(int combinationPoints, int currentScore); 
+    bool _readColRowSize(int rowColSize); 
+    //bool _withinMatrix(int row, int col, int rowSize, int colSize);
+    //bool _elementsAreAdjacent(int rowCurrent, int colCurrent, int rowDestination, int colDestination);
+    //bool _eliminateElement(int* matriz, int rowSize, int colSize, int row, int col);
+    
 }
 
 
@@ -24,9 +30,9 @@ class GameBoard {
     // Matriz dinámica, para que se pueda ajustar según el tamaño del tablero deseado
     int* gameMatrix;
     // Inicializar sistema de puntuación
-    int punctuation;
-    // Movimientos restantes (DE PRUEBA!!!, hay que implementar que los movimientos se obtengan de nivel)
-    int moves = 5;
+    int currentScore = 0;
+    
+    
     // Matriz con las formas L y T, incluyendo todas sus rotaciones
     int LTshapes[8][5][2] = {
       // 1         2         3         4         5
@@ -46,12 +52,11 @@ class GameBoard {
       DESTROY = 1
     };
 
-   
-    
   // Funciones privadas
   private:
+    void dibujarMatriz(sf::RenderWindow& ventana);
     void cargarTexturas();
-    void showWindow();
+    void showWindow(sf::RenderWindow& window);
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
     // Crear matriz dinámica, retorna int que indica si lo inicializó correctamente
@@ -114,7 +119,7 @@ class GameBoard {
     // Para obtener una instancia de GameBoard
     static GameBoard& getInstance();
     // Función que maneja todas las funciones del GameBoard
-    int runGameBoard();
+    bool runGameBoard(int moves, int goalScore);
 
     int*& getMatriz(){
       return this->gameMatrix;

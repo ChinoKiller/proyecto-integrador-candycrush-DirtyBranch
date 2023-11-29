@@ -4,6 +4,11 @@ global _setValue
 global _isSameColor
 global _getCellValue
 global _getCell
+global _readColRowSize
+global _pointsSystem
+global _withinMatrix
+;global _elementsAreAdjacent
+;global _eliminateElement
 
 ;funcion para inicializar la matriz
 ; Parámetros:
@@ -110,3 +115,152 @@ _isSameColor:
 _iguales:
     mov al, 1
     ret
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; funcion que sirve para el control de las puntuaciones.
+; parametros:
+; rdi = combinationPoints
+; rsi = this->currentScore
+
+_pointsSystem:
+	mov rax, rdi
+	add rax, rsi
+	ret
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; Funcion que revisa si tamanos de cols y rows
+; Parametros
+; rdi rowColSize
+
+_readColRowSize:
+	cmp rdi, 8
+	jl fueraDeTamano
+	cmp rdi, 10
+	jg fueraDeTamano
+	mov rax, 1
+	jmp exitRead
+
+fueraDeTamano:
+	xor rax, rax
+exitRead:
+	ret
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; Funcion que revisa si tamanos que una posicion este dentro de la matriz
+; Parametros
+; rdi = row
+; rsi = col
+; rdx = this->rowSize
+; rcx = this->colSize
+
+_withinMatrix:
+	; Revisar rows
+	cmp rdi, 0
+	jl fueraDeMatriz
+	cmp rdi, rdx
+	jge fueraDeMatriz
+
+	; Revisar cols
+	cmp rsi, 0
+	jl fueraDeMatriz
+	cmp rsi, rcx
+	jge fueraDeMatriz
+	
+	; Significa que se cumple todo.
+	mov rax, 1
+	jmp exitWithin
+
+fueraDeMatriz:
+	xor rax, rax
+	
+exitWithin:
+	ret
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+; Funcion que revisa si los elementos son adyancentes
+; Parametros
+; rdi rowCurrent
+; rsi colCurrent
+; rdx rowDestination
+; rcx colDestination
+
+;_elementsAreAdjacent:
+;	mov r8, rsi
+;	dec r8
+;	mov r9, rsi
+;	inc r9
+;	mov r10, rdi
+;	dec r10
+;	mov r11, rdi
+;	inc r11
+;; ya estan los valores correctos
+;	cmp rdi, rdx
+;	jne revisarColumnas
+
+	; si son iguales 
+	cmp r8, rcx
+;	je sonAdyacentes
+	cmp r9, rcx
+;	je sonAdyacentes
+;	jmp noAdyacentes
+
+;revisarColumnas:
+;	cmp rsi, rcx
+;	jne noAdyacente
+
+	; si son iguales
+;	cmp r10, rdx
+;	je sonAdyacentes
+;	cmp r11, rdx
+;	je sonAdyacentes
+;	jmp noAdyacentes
+
+;sonAdyacentes:
+;	mov rax, 1
+;	jmp exitAdyacentes
+
+;noAdyacentes:
+;	xor rax, rax
+
+;exitAdyacentes:
+;	ret
+
+;XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+;funcion de ensambla para eliminar un valor especifico, retorna un booleano de si se elimino bien
+  ;parametros eliminate
+  ; rdi = dirección de memoria de la matriz
+  ; rsi = tamaño filas (this-> rowSize)
+  ; rdx = tamaño columnas (this-> colSize)
+  ; rcx = row
+  ; r8 = col
+  ;_eliminateElement:	
+    ;guardar parametros iniciales
+    ;mov r10, rdi ; rdi = dirección de memoria de la matriz
+    ;mov r11, rsi ; rsi = tamaño filas
+    ;mov r12, rdx ; rdx = tamaño columnas
+    ;mov r13, rcx ; rcx = row
+    
+    ;cambiar parametros orden
+    ;mov rdi, r13 ; rdi = row
+    ;mov rsi, r8 ; rsi = col
+    ;mov rdx, r11 ; rdx = this->rowSize
+    ;mov rcx, r12 ; rcx = this->colSize
+
+    ;call _withinMatrix
+    ;cmp rax, 0
+    ;je error
+
+    ;cambiar parametros orden
+    ;mov rdi, r10 ; rdi = row
+    ;mov rsi, r11 ; rsi = col
+    ;mov rdx, r12 ; rdx = this->rowSize
+    ;mov rcx, r13 ; rcx = this->colSize
+    ;mov r9, 0 ; r9 = newValue (0 en este caso)
+
+    ;call _setValue
+    ;mov rax, 1
+    ;ret
+
+;error:
+  ;xor rax, rax
+  ;ret
