@@ -23,7 +23,7 @@ Menu menuP(sf::RenderWindow &window, Menu &currentMenu){
 
     // Variables para controlar la animación menu principal
     int currentFrame = 0;
-        float frameTime = 0.1f;
+    float frameTime = 0.1f;
     
     while (window.isOpen()&& currentMenu==MAIN_MENU) {
         sf::Event event;
@@ -67,25 +67,38 @@ Menu menuGameOver(sf::RenderWindow &window, Menu &currentMenu){
     std::vector<sf::Texture> frames;
     for (int i = 1; i <= NUM_FRAMES; i++) {
         sf::Texture texture;
-        if (texture.loadFromFile("./assets/menuPrincipal/MENU_RESIZED" + std::to_string(i) + ".png")) {
+        if (texture.loadFromFile("./assets/gameOver/game_over" + std::to_string(i) + ".png")) {
+            frames.push_back(texture);
+        }
+    }
+    return currentMenu;
+}
+
+Menu winMenu(sf::RenderWindow &window, Menu &currentMenu) {
+    int NUM_FRAMES = 12;
+    // Cargar una serie de imágenes en un vector
+    std::vector<sf::Texture> frames;
+    for (int i = 1; i <= NUM_FRAMES; i++) {
+        sf::Texture texture;
+        if (texture.loadFromFile("./assets/sol_gane/GANE_SOL" + std::to_string(i) + ".png")) {
             frames.push_back(texture);
         }
     }
 
     // Variables para controlar la animación menu principal
     int currentFrame = 0;
-        float frameTime = 0.1f;
-    
-    while (window.isOpen()&& currentMenu==GAME_OVER) {
+    float frameTime = 0.1f;
+
+    while (window.isOpen()&& currentMenu==WIN) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
             if (event.type == sf::Event::KeyPressed) {
-                if (currentMenu == GAME_OVER) {
-                    } else if (event.key.code == sf::Keyboard::X) { 
-                        currentMenu = LEVEL_MENU;
+                if (currentMenu == WIN) {
+                    if (event.key.code == sf::Keyboard::X) {
+                        currentMenu = MAIN_MENU;
                     } 
                 }
             }
@@ -100,10 +113,7 @@ Menu menuGameOver(sf::RenderWindow &window, Menu &currentMenu){
         sf::sleep(sf::seconds(frameTime));
         currentFrame = (currentFrame + 1) % frames.size();
 
-    return currentMenu;
-}
-
-Menu winMenu(sf::RenderWindow &window, Menu &currentMenu) {
+    }
     return currentMenu;
 }
 
@@ -238,7 +248,7 @@ Menu menuCr(sf::RenderWindow &window, Menu &currentMenu){
             if (event.type == sf::Event::KeyPressed) {
                 if (currentMenu == CREDITS_MENU) {
                     if (event.key.code == sf::Keyboard::Left) {
-                        currentMenu = MAIN_MENU;
+                        currentMenu = SETTINGS_MENU;
                     } else if (event.key.code == sf::Keyboard::Right) {
                         currentMenu = CREDITS_MENU;   
                     } 
@@ -344,7 +354,10 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
 
 
     while (window.isOpen()&& currentMenu==LEVEL_MENU) {
-            
+        bool blockedLevels = true;
+        if (currentLevelNumber == 10) {
+            blockedLevels = false;
+        }
             switch (currentLevelNumber) {
                 case 1:
                     sol.setTexture(texturasPlanetasInactivos["sol"]);
@@ -436,6 +449,16 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
                     saturno.setTexture(texturasPlanetasActivos["saturno"]);
                     urano.setTexture(texturasPlanetasActivos["urano"]);
                     break;
+                case 10:
+                    sol.setTexture(texturasPlanetasActivos["sol"]);
+                    mercurio.setTexture(texturasPlanetasActivos["mercurio"]);
+                    venus.setTexture(texturasPlanetasActivos["venus"]);
+                    tierra.setTexture(texturasPlanetasActivos["tierra"]);
+                    marte.setTexture(texturasPlanetasActivos["marte"]);
+                    jupiter.setTexture(texturasPlanetasActivos["jupiter"]);
+                    saturno.setTexture(texturasPlanetasActivos["saturno"]);
+                    urano.setTexture(texturasPlanetasActivos["urano"]);
+                    break;
                 default:
                     break;
             
@@ -468,6 +491,14 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
                         currentMenu = MAIN_MENU;
                     } else if (event.key.code == sf::Keyboard::X) { 
                         currentMenu = TABLERO;
+                    } else if (event.key.code == sf::Keyboard::Right) {
+                        if (currentLevelNumber>=2){
+                            currentLevelNumber -= 1;
+                        }
+                    } else if (event.key.code == sf::Keyboard::Left) {
+                        if (currentLevelNumber<=8){
+                            currentLevelNumber += 1;
+                        }
                     }
                 }
             }
@@ -479,6 +510,9 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
 
 Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
     // Crear instancia del controlador
+    if (currentLevelNumber == 10) {
+        return WIN;
+    }
 	Controlador gameController = Controlador(window, currentLevelNumber);
     currentLevelNumber = gameController.getCurrentLevel();
 	// Controlador crea Nivel y empieza a jugar
@@ -492,6 +526,7 @@ Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
         currentMenu = GAME_OVER;
 
     }
+   
     return currentMenu;
 }
 
@@ -526,6 +561,12 @@ int main() {
                 break;
             case CREDITS_MENU:
                 currentMenu = menuCr(window, currentMenu);
+                break;
+            case GAME_OVER:
+                currentMenu = menuGameOver(window, currentMenu);
+                break;
+            case WIN:
+                currentMenu = winMenu(window, currentMenu);
                 break;
             default:
                 break;
