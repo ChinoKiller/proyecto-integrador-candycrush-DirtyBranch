@@ -6,7 +6,7 @@
 #define BOARD_SIZE_SUN     10
 
 // Numero de movimientos por nivel
-#define MOVES_LEVEL_1   3  // Neptuno
+#define MOVES_LEVEL_1   30  // Neptuno
 #define MOVES_LEVEL_2   30  // Urano
 #define MOVES_LEVEL_3   30  // Saturno
 #define MOVES_LEVEL_4   30  // Jupiter

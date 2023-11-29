@@ -8,7 +8,7 @@ global _readColRowSize
 global _pointsSystem
 global _withinMatrix
 ;global _elementsAreAdjacent
-global _eliminateElement
+; global _eliminateElement
 ;global _applyGravity
 
 ;funcion para inicializar la matriz

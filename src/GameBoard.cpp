@@ -56,7 +56,7 @@ bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, i
           }
         }
         // Restarle a movimientos para salir del while loop
-        moves = moves - 1;
+        //moves = moves - 1;
       }
     
 			// Puntos totales
@@ -673,27 +673,31 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
     textNext.setCharacterSize(20);
     textNext.setFillColor(sf::Color::White);
     textNext.setPosition(50, 650-100);  // Coordenas X e Y
-	/*
-	std::string cadena;
 	
-	*/
+	std::stringstream lm;
+	std::stringstream cs;
+	std::stringstream gs;
+	lm << localMoves;
+
 	textMovimientosNumber.setFont(font);
-    //textMovimientosNumber.setString();
+    textMovimientosNumber.setString(lm.str());
     textMovimientosNumber.setCharacterSize(20);
     textMovimientosNumber.setFillColor(sf::Color::White);
-    textMovimientosNumber.setPosition(50, 250);  // Coordenas X e Y
+    textMovimientosNumber.setPosition(50, 250+50);  // Coordenas X e Y
 
+	cs << currentScore; 
     textScoreNumber.setFont(font);
-    textScoreNumber.setString("Puntaje =");
+    textScoreNumber.setString(cs.str());
     textScoreNumber.setCharacterSize(20);
     textScoreNumber.setFillColor(sf::Color::White);
-    textScoreNumber.setPosition(50, 450-50);  // Coordenas X e Y
+    textScoreNumber.setPosition(50, 450-50+50);  // Coordenas X e Y
 
+	gs << localGoalScore; 
     textNextNumber.setFont(font);
-    textNextNumber.setString("Siguiente Nivel =");
+    textNextNumber.setString(gs.str());
     textNextNumber.setCharacterSize(20);
     textNextNumber.setFillColor(sf::Color::White);
-    textNextNumber.setPosition(50, 650-100);  // Coordenas X e Y
+    textNextNumber.setPosition(50, 650-100+50);  // Coordenas X e Y
 
 
     board.setSize(sf::Vector2f(540, 540));
@@ -719,6 +723,9 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
         window.draw(textMovimientos);
         window.draw(textScore);
         window.draw(textNext);
+		window.draw(textMovimientosNumber);
+        window.draw(textScoreNumber);
+        window.draw(textNextNumber);
     dibujarMatriz(window);
     
 
@@ -1088,17 +1095,18 @@ void GameBoard::eliminateVertical(int row, int col, int lengthToEliminate){
 }
 
 // elimina un elemento, poniendo su valor en 0
-int GameBoard::eliminateElement(int row, int col) {
-	// asegurarse que el elemento a eliminar exista
-	if(!_eliminateElement(this->gameMatrix, this->rowSize, this->colSize, row,col)) {
-    std::cout << "Falló al eliminar elemento" << std::endl;
-	  return EXIT_FAILURE;
+// int GameBoard::eliminateElement(int row, int col) {
+// 	// asegurarse que el elemento a eliminar exista
+// 	if(!_eliminateElement(this->gameMatrix, this->rowSize, this->colSize, row,col)) {
+//     std::cout << "Falló al eliminar elemento" << std::endl;
+// 	  return EXIT_FAILURE;
 	
-	}
-  return EXIT_SUCCESS;
+// 	}
+//   return EXIT_SUCCESS;
 
-}
-/*int GameBoard::eliminateElement(int row, int col) {
+// }
+
+int GameBoard::eliminateElement(int row, int col) {
 	// asegurarse que el elemento a eliminar exista
 	if(_withinMatrix(row,col, this->rowSize, this->colSize)) {
 	_setValue(this->gameMatrix,this->rowSize,this->colSize,row,col,0);
@@ -1106,7 +1114,7 @@ int GameBoard::eliminateElement(int row, int col) {
 	}
 	std::cout << "Falló al eliminar elemento" << std::endl;
 	return EXIT_FAILURE;
-}*/
+}
 /*
 funcion en c++
 
