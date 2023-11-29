@@ -29,5 +29,5 @@ class Level {
     // Get instance de Level
     static Level& getInstance();
     // Correr nivel
-    bool runLevel();
+    bool runLevel(sf::RenderWindow& window);
 };

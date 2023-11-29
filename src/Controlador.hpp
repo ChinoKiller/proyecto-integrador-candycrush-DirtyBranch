@@ -5,11 +5,12 @@
 class Controlador {
 public:
   // Default constructor
-  Controlador(): currentLevel(currentLevelNumber){}
+  Controlador(sf::RenderWindow& window):window(window){}
   ~Controlador(){}
   // Función que corre el juego
   int runGame();
 private:
+  sf::RenderWindow& window;
   // Nivel actual
   Level currentLevel;
   // Numero de nivel actual

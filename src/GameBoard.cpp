@@ -8,14 +8,14 @@ GameBoard& GameBoard::getInstance() {
 }
 
 // Llama las funciones del GameBoard en el orden necesario
-bool GameBoard::runGameBoard(int moves, int goalScore) {
+bool GameBoard::runGameBoard(sf::RenderWindow& window, int moves, int goalScore) {
 	// Generar una matriz de juego random
 	generateRandomBoard();
 	
   // Muestra la ventana de juego
   cargarTexturas();
-  sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
-  showWindow(window);
+  
+	showWindow(window);
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
@@ -471,8 +471,8 @@ void GameBoard::showWindow(sf::RenderWindow& window) {
     sf::Text textNext;
 
     //hacerlo dinamico para el planeta actual
-    texturePlanet.loadFromFile("./MenusSfml/niveles/Planetas/VenusActivo.png");
-    font.loadFromFile("./MenusSfml/Fuentes/prstart.ttf");
+    texturePlanet.loadFromFile("./assets/niveles/Planetas/VenusActivo.png");
+    font.loadFromFile("./assets/Fuentes/prstart.ttf");
 
     textPlanets.setFont(font);
     textPlanets.setString("Venus");
@@ -508,7 +508,7 @@ void GameBoard::showWindow(sf::RenderWindow& window) {
     board.setPosition(390-25+300, 110-25);
 
     sf::Texture textureFondo;
-    textureFondo.loadFromFile("./MenusSfml/menuPrincipal/menuFondo1.png");
+    textureFondo.loadFromFile("./assets/menuPrincipal/menuFondo1.png");
     sf::Sprite fondo(textureFondo);
     cargarTexturas();
 
@@ -534,12 +534,12 @@ void GameBoard::cargarTexturas(){
     texturasAliens["rojo"] = sf::Texture();
     texturasAliens["verde"] = sf::Texture();
 
-    texturasAliens["amarillo"].loadFromFile("./src/VentanaJuego/aliens/amarillo.png");
-    texturasAliens["azul"].loadFromFile("./src/VentanaJuego/aliens/azul.png");
-    texturasAliens["morado"].loadFromFile("./src/VentanaJuego/aliens/morado.png");
-    texturasAliens["naranja"].loadFromFile("./src/VentanaJuego/aliens/naranja.png");
-    texturasAliens["rojo"].loadFromFile("./src/VentanaJuego/aliens/rojo.png");
-    texturasAliens["verde"].loadFromFile("./src/VentanaJuego/aliens/verde.png");
+    texturasAliens["amarillo"].loadFromFile("./assets/aliens/amarillo.png");
+    texturasAliens["azul"].loadFromFile("./assets/aliens/azul.png");
+    texturasAliens["morado"].loadFromFile("./assets/aliens/morado.png");
+    texturasAliens["naranja"].loadFromFile("./assets/aliens/naranja.png");
+    texturasAliens["rojo"].loadFromFile("./assets/aliens/rojo.png");
+    texturasAliens["verde"].loadFromFile("./assets/aliens/verde.png");
 
 }
 
@@ -998,25 +998,68 @@ _applyGravity:
 	
 	; primer for
 	;for (int colIndex = 0; colIndex < this->colSize; colIndex++)
-	mov rax, 0		; colIndex
-	cmp rax, r12	;colIndex < this->colSize
-	jge salirGravedad
-	; si rax es menor que this->colSize
+	mov r15, 0		;colIndex
+	mov rbx, r11 	
+	dec rbx			; int rowIndex = this->rowSize - 1	
+for1:
+	;mov r15, 0		;colIndex
+	cmp r15, r12	;colIndex < this->colSize
+	jge salirFor1
+	; si r15 es menor que this->colSize
 	mov r8, r11 
 	dec r8			;	int destinationRow = this->rowSize - 1
 
+	;segundo for
 	;for (int rowIndex = this->rowSize - 1; rowIndex >= 0; rowIndex--) {
-	mov rbx, r11 	
-	dec rbx			; int rowIndex = this->rowSize - 1
+for2:
+	;mov rbx, r11 	
+	;dec rbx			; int rowIndex = this->rowSize - 1
+	cmp rbx, 0
+	jl salirFor2
 
-	inc rax		; colIndex++
+	;int cellValue = _getCellValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex);
+
+	mov rdi, r10	;this->gameMatrix
+	mov rsi, r11	;this->rowSize
+	mov rdx, r12	;this->colSize
+	mov rcx, rbx	;rowIndex
+	mov r8, r15		;colIndex
+	call _getCellValue
+
+	mov r14, rax	;int cellValue
+	cmp r14, 0		if (cellValue!= 0)
+	je aumentarFor2
+	;_setValue(this->gameMatrix,this->rowSize,this->colSize,destinationRow,colIndex,cellValue);
+	mov rdi, r10	;this->gameMatrix
+	mov rsi, r11	;this->rowSize
+	mov rdx, r12	;this->colSize
+	mov rcx, rbx	;rowIndex
+	mov r8, r15		;colIndex
+	mov r9, r14 	;cellValue
+	call setValue
+
+	cmp r8, rbx 	;if (destinationRow != rowIndex)
+	je seguir
+	;_setValue(this->gameMatrix,this->rowSize,this->colSize,rowIndex,colIndex,0);
+	mov rdi, r10	;this->gameMatrix
+	mov rsi, r11	;this->rowSize
+	mov rdx, r12	;this->colSize
+	mov rcx, rbx	;rowIndex
+	mov r8, r15		;colIndex
+	mov r9, 0 	;0
+	call setValue
+
+seguir:
+	dec r8			;destinationRow--
+
+aumentarFor2:
+	dec rbx 	; rowIndex--
+	jmp for2
+
+salirFor2:
+	inc r15		; colIndex++
+	jmp for1
 	
-
-	hacer el for 1
-	poner destinationRow 
-	hacer el for 2
-	llamar a getCellValue
-	comparacion
-salirGravedad
+salirFor1
 	ret
 */

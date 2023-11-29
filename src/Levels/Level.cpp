@@ -64,7 +64,7 @@ Level::Level(int levelNumber): levelNumber(levelNumber)
     }
 }
 
-bool Level::runLevel() {
+bool Level::runLevel(sf::RenderWindow& window) {
     // Inicializar matriz de juego según el tamaño designado para cada nivel
     // si el numero del nivel [1,8], tamaño de 9x9
     currentGameBoard = GameBoard();
@@ -86,6 +86,6 @@ bool Level::runLevel() {
     << "★ Movimientos restantes: " << this->moves << std::endl
     << "₊ °✦ ‧  ‧ ₊ ˚✧" << std::endl;
     // Correr el tablero de juego
-    return currentGameBoard.runGameBoard(this->moves, this->goalScore);
+    return currentGameBoard.runGameBoard(window, this->moves, this->goalScore);
 }
 

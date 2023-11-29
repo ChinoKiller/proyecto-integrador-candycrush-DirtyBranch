@@ -2,7 +2,7 @@
 #include <iostream>
 #include <random>
 #include <SFML/Graphics.hpp>
-#include "./VentanaJuego/VentanaJuego.hpp"
+
 
 // Declaración funciones ensambla
 extern "C" {
@@ -119,7 +119,7 @@ class GameBoard {
     // Para obtener una instancia de GameBoard
     static GameBoard& getInstance();
     // Función que maneja todas las funciones del GameBoard
-    bool runGameBoard(int moves, int goalScore);
+    bool runGameBoard(sf::RenderWindow& window, int moves, int goalScore);
 
     int*& getMatriz(){
       return this->gameMatrix;
