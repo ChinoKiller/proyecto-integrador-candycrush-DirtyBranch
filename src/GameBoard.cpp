@@ -594,54 +594,72 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
     sf::Text textNextNumber;
 
     //hacerlo dinamico para el planeta actual
- 
+	    board.setOutlineThickness(10.f);
     font.loadFromFile("./assets/Fuentes/prstart.ttf");
 
 	    switch (currentLevelNumber) {
         case 1:
             this->levelName = "Neptuno";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/NeptunoActivo.png");
-						planet.setScale(0.28, 0.28);
+			planet.setScale(0.28, 0.28);
+			board.setFillColor(sf::Color(51, 137, 255));
+			board.setOutlineColor(sf::Color( 157, 231, 255 ));
             break;
         case 2:
             this->levelName = "Urano";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/UranoActivo.png");
-						planet.setScale(0.28, 0.28);
+			planet.setScale(0.28, 0.28);
+			board.setFillColor(sf::Color(88, 228, 192));
+			board.setOutlineColor(sf::Color( 188, 238, 223 ));
             break;
         case 3:
             this->levelName = "Saturno";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/SaturnoActivo.png");
-						planet.setScale(0.30, 0.30);
+			planet.setScale(0.30, 0.30);
+			board.setFillColor(sf::Color(234, 202, 104));
+			board.setOutlineColor(sf::Color( 151, 108, 57 ));
             break;
         case 4:
             this->levelName = "Jupiter";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/JupiterActivo.png");
-						planet.setScale(0.25, 0.25);
+			planet.setScale(0.25, 0.25);
+			board.setFillColor(sf::Color(187, 165, 100));
+			board.setOutlineColor(sf::Color( 191, 82, 23 ));
             break;
         case 5:
             this->levelName = "Marte";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/MarteActivo.png");
-						planet.setScale(0.30, 0.30);
+			planet.setScale(0.30, 0.30);
+			board.setFillColor(sf::Color(198, 67, 33));
+			board.setOutlineColor(sf::Color( 214, 124, 75 ));
             break;
         case 6:
             this->levelName = "Tierra";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/TierraActivo.png");
-						planet.setScale(0.30, 0.30);
+			planet.setScale(0.30, 0.30);
+			board.setFillColor(sf::Color( 0, 130, 255 ));
+			board.setOutlineColor(sf::Color( 28, 166, 9 ));
             break;
         case 7:
             this->levelName = "Venus";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/VenusActivo.png");
-						planet.setScale(0.30, 0.30);
+			planet.setScale(0.30, 0.30);
+			board.setFillColor(sf::Color( 239, 201, 123 ));
+			board.setOutlineColor(sf::Color( 130, 68, 6 ));
             break;
         case 8:
             this->levelName = "Mercurio";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/MercurioActivo.png");
-						planet.setScale(0.30, 0.30);
+			planet.setScale(0.30, 0.30);
+			board.setFillColor(sf::Color( 244, 217, 163 ));
+			board.setOutlineColor(sf::Color( 186, 168, 113 ));
             break;
         case 9:
             this->levelName = "Sol";
             texturePlanet.loadFromFile("./assets/niveles/Planetas/SolActivo.png");
-						planet.setScale(0.20, 0.20);
+			planet.setScale(0.20, 0.20);
+			board.setFillColor(sf::Color( 255, 174, 26 ));
+			board.setOutlineColor(sf::Color( 255, 191, 0 ));
             break;
         default:
             break;
@@ -701,7 +719,7 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
 
 
     board.setSize(sf::Vector2f(540, 540));
-    board.setFillColor(sf::Color(128, 128, 128));
+
     board.setPosition(390-25+300, 110-25);
 
 	cuadro.setSize(sf::Vector2f(45, 45));

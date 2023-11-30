@@ -11,7 +11,7 @@ int crrntTxreSfx = 0;   // este al booleando de los efectos de sonido
 int currentLevelNumber = 1;
 
 
-Menu menuP(sf::RenderWindow &window, Menu &currentMenu){
+Menu menuP(sf::RenderWindow &window, Menu &currentMenu, sf::Music& music){
     int NUM_FRAMES = 7;
     // Cargar una serie de imágenes en un vector
     std::vector<sf::Texture> frames;
@@ -21,7 +21,13 @@ Menu menuP(sf::RenderWindow &window, Menu &currentMenu){
             frames.push_back(texture);
         }
     }
-
+    if(!music.openFromFile("assets/musica/Sailor_Girl.wav")) {
+        std::cout << "No se abrió la musica" << std::endl;
+    }
+    if(crrntTxreMsc==0){
+        music.play();
+        music.setLoop(true);
+    }
     // Variables para controlar la animación menu principal
     int currentFrame = 0;
     float frameTime = 0.1f;
@@ -118,7 +124,7 @@ Menu winMenu(sf::RenderWindow &window, Menu &currentMenu) {
     return currentMenu;
 }
 
-Menu menuC(sf::RenderWindow &window, Menu &currentMenu){
+Menu menuC(sf::RenderWindow &window, Menu &currentMenu, sf::Music& music){
     sf::Texture textureFondo;
     sf::Texture textureconfigBoard;
     sf::Texture textureMusica;
@@ -175,15 +181,18 @@ Menu menuC(sf::RenderWindow &window, Menu &currentMenu){
                     if(crrntTxreMsc == 0){
                         sf::sleep(sf::seconds(0.2));
                         crrntTxreMsc = 1;
+                        music.pause();
                     } else if(crrntTxreMsc == 1){
                         sf::sleep(sf::seconds(0.2));
                         crrntTxreMsc = 0;
+                        music.play();
+                        music.setLoop(true);
                     }
                 } else if (event.key.code == sf::Keyboard::S) {
-                    if(crrntTxreSfx == 0){
+                    if(crrntTxreSfx == 0){ //activada
                         sf::sleep(sf::seconds(0.2));
                         crrntTxreSfx = 1;
-                    } else if(crrntTxreSfx == 1){
+                    } else if(crrntTxreSfx == 1){ //desactivada
                         sf::sleep(sf::seconds(0.2));
                         crrntTxreSfx = 0;
                     }
@@ -230,11 +239,16 @@ Menu menuI(sf::RenderWindow &window, Menu &currentMenu){
 }
 
 // Menu Créditos
-Menu menuCr(sf::RenderWindow &window, Menu &currentMenu){
+Menu menuCr(sf::RenderWindow &window, Menu &currentMenu, sf::Music& music){
     std::vector<sf::Texture> frames;
     sf::Texture texture;
     texture.loadFromFile("./assets/menuConfiguraciones/creditos.jpg");
-
+    if(!music.openFromFile("assets/musica/creditos.wav")) {
+        std::cout << "No se abrió la musica" << std::endl;
+    }
+    if(crrntTxreMsc==0){
+        music.play();
+    }
     while (window.isOpen()&& currentMenu==CREDITS_MENU) {
         sf::Event event;
         window.clear();
@@ -249,7 +263,7 @@ Menu menuCr(sf::RenderWindow &window, Menu &currentMenu){
             if (event.type == sf::Event::KeyPressed) {
                 if (currentMenu == CREDITS_MENU) {
                     if (event.key.code == sf::Keyboard::Left) {
-                        currentMenu = SETTINGS_MENU;
+                        currentMenu = MAIN_MENU;
                     } else if (event.key.code == sf::Keyboard::Right) {
                         currentMenu = CREDITS_MENU;   
                     } 
@@ -534,22 +548,17 @@ Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
 
 int main() {
     sf::Music music;
-    if(!music.openFromFile("assets/musica/Sailor_Girl.wav")) {
-        std::cout << "No se abrió la musica" << std::endl;
-        return EXIT_FAILURE;
-    }
-    music.play();
-    music.setLoop(true);
+
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
     Menu currentMenu = MAIN_MENU;
-
+    
     //VentanaJuego ventanaTablero(window, 9, 9, matriz);
 
     //maquina de estados
     while (currentMenu != EXIT){
         switch (currentMenu) { 
             case MAIN_MENU:
-                currentMenu = menuP(window, currentMenu);
+                currentMenu = menuP(window, currentMenu, music);
                 break;
 
             case LEVEL_MENU:
@@ -561,14 +570,14 @@ int main() {
                 break;
 
             case SETTINGS_MENU:
-                currentMenu = menuC(window, currentMenu);
+                currentMenu = menuC(window, currentMenu, music);
                 break;
             
             case TABLERO:
                 currentMenu = menuT(window, currentMenu);
                 break;
             case CREDITS_MENU:
-                currentMenu = menuCr(window, currentMenu);
+                currentMenu = menuCr(window, currentMenu, music);
                 break;
             case GAME_OVER:
                 currentMenu = menuGameOver(window, currentMenu);
