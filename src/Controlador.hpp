@@ -5,7 +5,8 @@
 class Controlador {
 public:
   // Default constructor
-  Controlador(sf::RenderWindow& window, int& currentLevelNumber):window(window), currentLevelNumber(currentLevelNumber){}
+  Controlador(sf::RenderWindow& window, int& currentLevelNumber, int& sfxEnable)
+    :window(window), currentLevelNumber(currentLevelNumber), sfxEnable(sfxEnable){}
   ~Controlador(){}
   // Función que corre el juego
   bool runGame();
@@ -17,4 +18,5 @@ private:
   Level currentLevel;
   // Numero de nivel actual
   int& currentLevelNumber;
+  int& sfxEnable;
 };

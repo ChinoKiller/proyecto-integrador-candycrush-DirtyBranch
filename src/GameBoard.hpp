@@ -3,6 +3,7 @@
 #include <sstream>
 #include <random>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 
 // Declaración funciones ensambla
@@ -38,6 +39,7 @@ class GameBoard {
     int currentScore = 0;
     int localMoves;
     int localGoalScore;
+    int sfxEnable;
 
     // Nivel actual en numero
 
@@ -63,7 +65,7 @@ class GameBoard {
   // Funciones privadas
   private:
     void dibujarMatriz(sf::RenderWindow& ventana);
-    void cargarTexturas();
+    void cargarRecursos();
     void showWindow(int currentLevelNumber, sf::RenderWindow& window);
     // Leer tamaño de la matriz, retorna bool que indica si lo leyó correctamente
     bool readColRowSize(int rowColSize);
@@ -127,7 +129,7 @@ class GameBoard {
     // Para obtener una instancia de GameBoard
     static GameBoard& getInstance();
     // Función que maneja todas las funciones del GameBoard
-    bool runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore);
+    bool runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore, int sfxEnable);
 
     int*& getMatriz(){
       return this->gameMatrix;

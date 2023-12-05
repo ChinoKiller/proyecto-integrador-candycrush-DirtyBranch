@@ -526,10 +526,16 @@ Menu menuN(sf::RenderWindow &window, Menu &currentMenu){
 
 Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
     // Crear instancia del controlador
+    int sfxEnable = crrntTxreSfx;
     if (currentLevelNumber == 10) {
         return WIN;
     }
-	Controlador gameController = Controlador(window, currentLevelNumber);
+    if(sfxEnable == 0){
+        sfxEnable = 1;
+    } else if (sfxEnable == 1){
+        sfxEnable = 0;
+    } 
+	Controlador gameController = Controlador(window, currentLevelNumber, sfxEnable);
     currentLevelNumber = gameController.getCurrentLevel();
 	// Controlador crea Nivel y empieza a jugar
     if (gameController.runGame()) {
@@ -548,8 +554,9 @@ Menu menuT(sf::RenderWindow &window, Menu &currentMenu){
 
 int main() {
     sf::Music music;
+    music.setVolume(10);
 
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alineados");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Alienigenas Alienados");
     Menu currentMenu = MAIN_MENU;
     
     //VentanaJuego ventanaTablero(window, 9, 9, matriz);

@@ -1,7 +1,7 @@
 #include "Level.hpp"
 
 // Constructor por parámetro de niveles de planetas y sol
-Level::Level(int levelNumber): levelNumber(levelNumber)
+Level::Level(int levelNumber, int& sfxEnable): levelNumber(levelNumber), sfxEnable(sfxEnable)
 { 
     
     switch (this->levelNumber)
@@ -68,7 +68,9 @@ Level::Level(int levelNumber): levelNumber(levelNumber)
 bool Level::runLevel(sf::RenderWindow& window) {
     // Inicializar matriz de juego según el tamaño designado para cada nivel
     // si el numero del nivel [1,8], tamaño de 9x9
+    std::cout<<"Creando gameboard"<< std::endl;
     currentGameBoard = GameBoard();
+    std::cout<<"Gameboard creado"<< std::endl;
     // Tamaño de matriz de juego
     int boardSize = BOARD_SIZE_PLANETS;
     if(this->levelNumber == 9) {
@@ -87,6 +89,7 @@ bool Level::runLevel(sf::RenderWindow& window) {
     << "★ Movimientos restantes: " << this->moves << std::endl
     << "₊ °✦ ‧  ‧ ₊ ˚✧" << std::endl;
     // Correr el tablero de juego
-    return currentGameBoard.runGameBoard(this->levelNumber, window, this->moves, this->goalScore);
+    std::cout<<"a punto entrar a run gameboard"<< std::endl;
+    return currentGameBoard.runGameBoard(this->levelNumber, window, this->moves, this->goalScore, this->sfxEnable);
 }
 

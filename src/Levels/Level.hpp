@@ -19,11 +19,12 @@ class Level {
     int currentScore;
     // Puntuación a alcanzar
     int goalScore;
+    int sfxEnable;
   public:
     // Constructor por default
     Level(){}
     // Constructor por parámetro 
-    Level(int levelNumber);
+    Level(int levelNumber, int& sfxEnable);
     // Destructor
     ~Level(){}
     // Get instance de Level

@@ -9,7 +9,7 @@ void Controlador::setCurrentLevel(int newLevel) {
 
 bool Controlador::runGame() {
     // Crear level
-    this->currentLevel = Level(currentLevelNumber);
+    this->currentLevel = Level(currentLevelNumber, sfxEnable);
     // Verificar si gano el juego
     if (currentLevel.runLevel(this->window)) {
         return true;

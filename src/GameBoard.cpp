@@ -1,6 +1,11 @@
 #include "GameBoard.hpp"
 #include <SFML/Graphics.hpp>
 
+
+
+	sf::Music sfxcmb;
+	sf::Music sfxmvr;
+
 // Para obtener solo una instancia del ChessBoard.
 GameBoard& GameBoard::getInstance() {
 	static GameBoard GameBoard;
@@ -8,13 +13,17 @@ GameBoard& GameBoard::getInstance() {
 }
 
 // Llama las funciones del GameBoard en el orden necesario
-bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore) {
+bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, int moves, int goalScore, int sfxEnable) {
 	// Generar una matriz de juego random
 	generateRandomBoard();
 	this->localMoves = moves;
 	this->localGoalScore = goalScore; 
+	this->sfxEnable = sfxEnable;
+
+	
+
   // Muestra la ventana de juego
-  cargarTexturas();
+  cargarRecursos();
     cuadro.setOutlineColor(sf::Color::Black);
 	showWindow(currentLevelNumber, window);
   while (window.isOpen()) {
@@ -28,7 +37,7 @@ bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, i
 
       // Mientras hayan movimientos, move >= 0 porque hay que eliminar la ultima jugada
     
-      while((moves >= 0) && (this->currentScore < goalScore)) {
+      while((localMoves >= 0) && (this->currentScore < goalScore)) {
         cuadro.setOutlineColor(sf::Color::Black);
 				//showWindow(window);
         // Eliminar todas las combinaciones hechas
@@ -36,19 +45,19 @@ bool GameBoard::runGameBoard(int currentLevelNumber, sf::RenderWindow& window, i
 				printMatrix();
 				std::cout << "⊹ ₊ Puntuación: " << this->currentScore << " ₊ ⊹" << std::endl << std::endl;
         // Si no estamos en la ultima ronda
-        if ((moves > 0) && (this->currentScore < goalScore)) {
+        if ((localMoves > 0) && (this->currentScore < goalScore)) {
           // Revisar que hayan combinaciones posibles
           if (findPosibleCombinations()) {
             // Si hay combinaciones posibles y movimientos restantes
             // Pedirle al usuario que haga una jugada (restar movimientos)
-			this->localMoves = moves;
+			//this->localMoves = moves;
 			this->localGoalScore = goalScore; 
             showWindow(currentLevelNumber, window);
             play(currentLevelNumber, window);
-			this->localMoves = moves;
+			//this->localMoves = moves;
 			this->localGoalScore = goalScore; 
             showWindow(currentLevelNumber, window);
-            moves = moves - 1;
+            localMoves = localMoves - 1;
           } else {
             // Si no hay combinaciones posibles y hay movimientos restantes
             // Generar nueva matriz de juego
@@ -232,6 +241,9 @@ void GameBoard::play(int currentLevelNumber, sf::RenderWindow& window) {
         window.close();
       }
       if (event.type == sf::Event::KeyPressed) {       
+		sfxcmb.stop();
+		sfxmvr.play();
+			
         if (event.key.code == sf::Keyboard::Right) {
           if(currentCol < colSize-1){
             currentCol++;
@@ -239,18 +251,21 @@ void GameBoard::play(int currentLevelNumber, sf::RenderWindow& window) {
           }
 
         } else if (event.key.code == sf::Keyboard::Left) {
+			//sfxmvr.play();
           if(currentCol > 0){
             currentCol--;
             showWindow(currentLevelNumber, window);
           }
 
         } else if (event.key.code == sf::Keyboard::Up) { 
+			//sfxmvr.play();
           if(currentRow > 0){
             currentRow--;
             showWindow(currentLevelNumber, window);
           }
 
         } else if (event.key.code == sf::Keyboard::Down) { 
+			//sfxmvr.play();
           if(currentRow < rowSize-1){
             currentRow++;
             showWindow(currentLevelNumber, window);
@@ -310,7 +325,12 @@ void GameBoard::play(int currentLevelNumber, sf::RenderWindow& window) {
             colDestination = currentCol;
             keepReading = false;
           }
-        } 
+        } else if (event.key.code == sf::Keyboard::X) { 
+            rowDestination = currentRow;
+            colDestination = currentCol;
+            keepReading = false;
+			localMoves++;
+        } 	
     
       }
     }         
@@ -323,7 +343,10 @@ void GameBoard::play(int currentLevelNumber, sf::RenderWindow& window) {
     std::cout << "No combinations, undo swap" << std::endl;
     swapElement(rowDestination, colDestination, currentRow, currentCol);
     //printMatrix();
+  } else {
+	sfxcmb.play();
   }
+
 }
 
 
@@ -730,7 +753,7 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
     sf::Texture textureFondo;
     textureFondo.loadFromFile("./assets/menuPrincipal/menuFondo1.png");
     sf::Sprite fondo(textureFondo);
-    cargarTexturas();
+    //cargarTexturas();
 
         window.clear();
         window.draw(fondo);
@@ -749,7 +772,7 @@ void GameBoard::showWindow(int currentLevelNumber, sf::RenderWindow& window) {
 
 }
 
-void GameBoard::cargarTexturas(){
+void GameBoard::cargarRecursos(){
     // Carga las texturas de los planetas en texturasAliens
     texturasAliens["amarillo"] = sf::Texture();
     texturasAliens["azul"] = sf::Texture();
@@ -765,6 +788,22 @@ void GameBoard::cargarTexturas(){
     texturasAliens["rojo"].loadFromFile("./assets/aliens/rojo.png");
     texturasAliens["verde"].loadFromFile("./assets/aliens/verde.png");
 
+	if(!sfxmvr.openFromFile("assets/sfx/mover.wav")){
+		std::cout<<"Error al leer esta shit"<< std::endl;
+	}
+	sfxmvr.setLoop(false);
+	sfxmvr.setVolume(100);
+	if(!sfxcmb.openFromFile("assets/sfx/combinacion.wav")){
+		std::cout<<"Error al leer esta otra shit"<< std::endl;
+	}
+	sfxcmb.setLoop(false);
+	sfxcmb.setVolume(100);
+	
+	if(sfxEnable == 0){
+		sfxmvr.setVolume(0);
+		sfxcmb.setVolume(0);
+	}
+    
 }
 
 void GameBoard::dibujarMatriz(sf::RenderWindow& ventana){
